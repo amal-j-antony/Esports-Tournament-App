@@ -22,11 +22,11 @@ export const carouselImages = [
         {
             url: "https://res.cloudinary.com/dwaaoyztz/image/upload/v1784263441/Ep8a1_Defiance_Youtube_Cover__a9tu1h.png",
             gameThumbnail: "https://pbs.twimg.com/media/GDG1kCTWMAARuaS.jpg",
-            id: "image4"
+            id: "image5"
         },
         {
             url: "https://4kwallpapers.com/images/walls/thumbs_2t/11664.jpg",
             gameThumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVHrQoM9ZF8n49PRMRpZ_fd3o1UKJVGZwGTCZuMXZnG80K9-uzY6qH_5Q&s=10",
-            id: "image5"
+            id: "image6"
         }
     ]
