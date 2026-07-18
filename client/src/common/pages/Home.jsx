@@ -14,6 +14,8 @@ import { FaExclamation } from "react-icons/fa";
 import { GoDotFill } from "react-icons/go";
 import { PiCrosshairSimpleFill } from "react-icons/pi";
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import Footer from '../components/Footer';
+
 
 function Home() {
 
@@ -42,7 +44,9 @@ function Home() {
                         <div className="absolute inset-0  rounded-3xl bg-[rgb(0,0,0,0.8)] flex justify-center items-center flex-col gap-10">
                             
                             <TrophyIcon size={200} className="z-2" />
-                            <button className='bg-[rgb(255,255,255,0.2)] border border-white  rounded-3xl bg-accent-f p-5 text-xl items-center gap-2 hover:bg-white hover:text-black duration-500 cursor-pointer flex'>Create and organize tournaments <ArrowRight/></button>
+                            <button className=' border border-white  rounded-3xl bg-accent-f p-5 text-xl items-center gap-2 hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer flex'>
+                                
+                                Create and organize tournaments <ArrowRight/></button>
                             
                         </div>
                         <img className='h-150 object-cover rounded-3xl' src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784347860/josh-berendes-t6e0ntPJ1RE-unsplash_nmzumk.jpg" alt="" />
@@ -51,12 +55,24 @@ function Home() {
                     <div className="relative flex justify-center">
                         <div className="absolute inset-0  rounded-3xl bg-[rgb(0,0,0,0.8)] flex justify-center items-center flex-col gap-10">
                             <GamepadIcon size={200} className="z-2" />
-                            <button className='bg-[rgb(255,255,255,0.2)] border border-white rounded-3xl p-5 text-xl items-center gap-2 hover:bg-white hover:text-black duration-500 cursor-pointer flex'>Participate in Tournaments <ArrowRight/></button>
+                            <button className=' border border-white rounded-3xl p-5 text-xl items-center gap-2 hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer flex'>Participate in Tournaments <ArrowRight/></button>
                         </div>
                         <img className='h-150 object-cover rounded-3xl' src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784347862/2149529367_bd2ylr.jpg" alt="" />
 
                     </div>
 
+                </section>
+
+                {/* clans */}
+                <section className='container relative mb-20'>
+                    <div className="absolute top-0 w-full h-full rounded-3xl flex flex-col justify-center items-center z-2 bg-[rgba(0,0,0,0.5)]">
+                        <p className='text-6xl text-center font-bold'>Assemble a crew and conquer the arena</p>
+                        <div className="flex justify-center gap-10 p-10 w-1/3">
+                            <button className='p-5 bg-[rgb(0,0,0,0.8)] border border-white hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer rounded-3xl text-xl font-bold'>Create a Squad</button>
+                            <button className='p-5 bg-[rgb(0,0,0,0.8)] border border-white hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer rounded-3xl text-xl font-bold'>Join a squad</button>
+                        </div>
+                    </div>
+                    <img src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784391819/call-of-duty-modern-warfare-2-war-zone-ghost-2022-games-3840x2160-8542_v9ju7x.jpg" className='rounded-3xl' alt="" />
                 </section>
 
                 {/* Trending  tournaments */}
@@ -87,6 +103,7 @@ function Home() {
                     color='#ff751f'
                 />
             </main>
+            <Footer/>
         </>
     )
 }
