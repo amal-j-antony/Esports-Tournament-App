@@ -1,11 +1,11 @@
 import UserHeader from '@/user/components/UserHeader'
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import TournamentHome from './TournamentHome'
 import TrophyIcon from '@/components/ui/trophy-icon'
 
 function Tournament() {
-    const { id } = useParams()
+
     const sidebarButtons = (value) => {
         if(tab == value){
           return "py-3 mb-3 text-2xl bg-accent-foreground ps-4 w-9/10 rounded-xl border border-accent duration-500 cursor-pointer flex items-center gap-2"
@@ -27,16 +27,17 @@ function Tournament() {
         }
       }
 
+      const navigate = useNavigate()
     return (
         <>
-            <UserHeader />
+            {/* <UserHeader /> */}
             <main className='w-full h-screen grid grid-cols-6 gap-1'>
                 {/* sidebar for tournament */}
                 <section className='flex justify-center bg-card'>
                     <ul className='flex items-center w-full flex-col gap-2 p-5 pt-10'>
-                        <TrophyIcon size={100}/>
-                        <li className='text-3xl font-bold pb-5'>Tournaments</li>
-                        <li className={sidebarButtons("home")}>Home</li>
+                        <img onClick={()=>navigate("/")} src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784428720/FIERZIO.gg_3_-Photoroom_npjprr.png" className='h-40' alt="" />
+
+                        <li className={sidebarButtons("home")}>Tournaments</li>
                     </ul>
                 </section>
 

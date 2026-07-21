@@ -1,5 +1,5 @@
-import { recentSquads } from '@/assets/dummySquad'
-import { dummyTournaments } from '@/assets/dummyTournaments'
+import { recentSquads } from '@/data/dummySquad'
+import { dummyTournaments } from '@/data/dummyTournaments'
 import { Plus } from 'lucide-react'
 import React from 'react'
 

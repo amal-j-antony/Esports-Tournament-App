@@ -1,6 +1,6 @@
-import { recentSquads } from '@/assets/dummySquad'
-import { dummyTournaments } from '@/assets/dummyTournaments'
-import { popularGames } from '@/assets/popularGames'
+import { recentSquads } from '@/data/dummySquad'
+import { dummyTournaments } from '@/data/dummyTournaments'
+import { popularGames } from '@/data/popularGames'
 import { Calendar, Gamepad, Gamepad2, List, Plus, PlusIcon, Target } from 'lucide-react'
 import React from 'react'
 import { FaExclamation, FaPlay, FaPlus, FaTrophy, FaUser } from 'react-icons/fa'
@@ -14,11 +14,11 @@ function UserHome() {
     const memberStyle = ""
     return (
         <>
-            <main className='p-10 flex flex-col gap-5'>
-                <h1 className='text-4xl font-bold'>Hey there, user1</h1>
-                <h2 className='text-2xl'>Play your first match</h2>
+            <main className='p-10 flex flex-col gap-5 '>
+                {/* <h1 className='text-4xl font-bold'>Hey there, user1</h1>
+                <h2 className='text-2xl'>Play your first match</h2> */}
                 <h2 className='text-3xl font-bold'>Popular games</h2>
-                <div className="flex gap-5 flex-nowrap md:flex-wrap overflow-auto scrollbar-none ">
+                <div className="h-full flex gap-5 flex-nowrap md:flex-wrap overflow-auto scrollbar-none ">
                     {
                         popularGames.map((item, index) => (
                             <React.Fragment key={item.title}>
@@ -33,6 +33,9 @@ function UserHome() {
                             </React.Fragment>
                         ))
                     }
+                    <div className="w-25 my-auto h-70 flex justify-center items-center bg-accent rounded-3xl">
+                        <h1>See more </h1>
+                    </div>
                 </div>
 
                 <div className='flex gap-5 items-center pt-10'>
@@ -85,6 +88,7 @@ function UserHome() {
                             </div>
                         ))
                     }
+                    
                 </section>
                 <button className="bg-accent p-5 rounded-2xl font-bold text-xl flex items-center gap-2 cursor-pointer justify-center hover:bg-accent-foreground duration-500">View more tournaments <FaPlus/></button>
 

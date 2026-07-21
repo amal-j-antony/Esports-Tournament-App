@@ -15,10 +15,10 @@ function Header({ login }) {
                 <section className={`w-9/10 flex justify-between items-center backdrop-blur-xl  py-3 rounded-3xl px-10 ${!login && "my-5 bg-card/70"} `} >
                     <img onClick={() => navigate("/")} src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784392713/FIERZIO.gg_2_-Photoroom_o7mwm8.png" className='h-15 cursor-pointer' alt="" />
                     <ul className="flex font-bold ">
-                        <Link to={"/user/1/tournaments"} className='text-xl cursor-pointer hover:bg-accent p-5 rounded-2xl duration-500' >Tournaments</Link>
-                        <Link to={"/lederboard"} className='text-xl cursor-pointer hover:bg-accent p-5 rounded-2xl duration-500' >Leaderboard</Link>
-                        <Link to={"/user/1/clans"} className='text-xl cursor-pointer hover:bg-accent p-5 rounded-2xl duration-500' >Clans</Link>
-                        <li className='text-xl cursor-pointer hover:bg-accent p-5 rounded-2xl duration-500' >Squads</li>
+                        <Link to={"/tournaments"} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Tournaments</Link>
+                        <Link to={"/lederboard"} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Leaderboard</Link>
+                        <Link to={"/user/1/clans"} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Clans</Link>
+                        <li className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Squads</li>
                         {
                             login ?
                                 <>
@@ -36,8 +36,8 @@ function Header({ login }) {
                                 </>
                                 :
                                 <>
-                                    <Link to={"/login"} className='text-xl cursor-pointer hover:bg-accent p-5 rounded-2xl duration-500' >Login</Link>
-                                    <Link to={"/register"} className='text-xl cursor-pointer border border-accent-foreground bg-accent-foreground hover:bg-accent p-5 rounded-2xl duration-500' >Sign Up</Link>
+                                    <Link to={"/login"} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Login</Link>
+                                    <Link to={"/register"} className='text-xl cursor-pointer border border-accent-foreground bg-accent-foreground hover:bg-accent p-3 rounded-2xl duration-500' >Sign Up</Link>
 
                                 </>
                         }

@@ -49,7 +49,7 @@ function Register() {
                                 : <EyeOff onClick={() => setViewConfirm(!viewConfirm)} className='absolute right-3 top-1/4' />
                         }
                     </div>
-                    <Link to={"/login"} className='bg-red-900 p-3 rounded-xl' >Create Account</Link>
+                    <Link to={"/login"} className='bg-red-900 p-3 rounded-xl text-center' >Create Account</Link>
                     <Link to={"/login"} className='border p-2 rounded-xl text-sm cursor-pointer bg-[rgba(255,255,255,0.1)] flex justify-center items-center' >Already have an account? Log in <ArrowRight /></Link>
                 </section>
             </main>

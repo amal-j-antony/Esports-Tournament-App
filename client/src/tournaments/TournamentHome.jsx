@@ -8,17 +8,20 @@ import {
     ComboboxItem,
     ComboboxList,
 } from "@/components/ui/combobox"
-import { FaTrophy } from 'react-icons/fa'
+import { FaCalendar, FaGamepad, FaPlus, FaTrophy } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 function TournamentHome() {
-
+    const navigate = useNavigate()
     const status = ["open", "coming soon", "live"]
 
     return (
         <>
-            <section className='col-span-5 flex flex-col bg-card'>
+            <section className='col-span-5 h-full min-h-screen flex flex-col bg-card'>
+               
                 {/* search bar */}
                 <div className="flex justify-center items-center relative gap-4 pt-10 pb-5">
+                    <button onClick={()=>navigate('/createTournament')} className='py-3 px-5 cursor-pointer bg-accent rounded-3xl flex items-center gap-2 hover:bg-accent-foreground duration-500 text-sm'><FaPlus/> Create Tournament</button>
                     {/* <input type="text" placeholder='Search for a game' className='bg-accent text-center p-3 w-1/2 rounded-3xl' /> */}
                     <Combobox items={status}>
                         <ComboboxInput className="h-11 w-1/2 text-center rounded-3xl" placeholder="Select Game" />
@@ -33,6 +36,7 @@ function TournamentHome() {
                             </ComboboxList>
                         </ComboboxContent>
                     </Combobox>
+
                     {/* <button className="p-2 bg-[#3f3f3f] rounded-3xl"><SearchIcon /></button> */}
                     <Combobox items={status}>
                         <ComboboxInput className="h-11 rounded-3xl" placeholder="Game Status" />
@@ -50,12 +54,12 @@ function TournamentHome() {
                 </div>
                 {/* view games */}
                 <div className="flex gap-10 p-10">
-                    <div className="p-5 bg-accent flex flex-col gap-5">
+                    <div onClick={()=>navigate("/tournaments/1")} className="p-5 bg-accent flex flex-col gap-5 cursor-pointer hover:bg-[#5a5a5a] duration-500">
                         <img className='w-75 h-75 object-cover' src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784263441/Ep8a1_Defiance_Youtube_Cover__a9tu1h.png" alt="" />
-                        <h1 className='text-2xl font-bold text-nowrap' >Title</h1>
-                        <h1 className="flex items-center gap-2 text-2xl"><FaTrophy />Prize Pool</h1>
-                        <h1 className='text-2xl flex items-center gap-2'><Calendar />Start Date</h1>
-                        <h1 className='text-2xl flex items-center gap-2'><Gamepad2 />Game</h1>
+                        <h1 className='text-xl font-bold text-nowrap' >Title</h1>
+                        <h1 className="flex items-center gap-2 text-lg"><FaTrophy />Prize Pool</h1>
+                        <h1 className='flex items-center gap-2 text-lg'><FaCalendar />Start Date</h1>
+                        <h1 className='flex items-center gap-2 text-lg'><FaGamepad />Game</h1>
                     </div>
                 </div>
             </section>

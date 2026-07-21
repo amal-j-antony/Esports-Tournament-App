@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { carouselImages } from '@/assets/heroCarousel'
+import { carouselImages } from '@/data/heroCarousel'
 
 function Carousel() {
     const [carouselCurrent, setCarouselCurrent] = useState(0)

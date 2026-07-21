@@ -8,7 +8,7 @@ import GamepadIcon from '@/components/ui/gamepad-icon';
 import { SmoothCursor } from '@/components/ui/smooth-cursor';
 import { Particles } from '@/components/ui/particles';
 import { ShineBorder } from '@/components/ui/shine-border';
-import { dummyTournaments } from '@/assets/dummyTournaments';
+import { dummyTournaments } from '@/data/dummyTournaments';
 import { GoDotFill } from "react-icons/go";
 import { PiCrosshairSimpleFill } from "react-icons/pi";
 import { ArrowLeft, ArrowRight } from 'lucide-react';
