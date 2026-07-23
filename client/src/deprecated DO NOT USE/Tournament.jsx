@@ -1,7 +1,7 @@
-import UserHeader from '@/user/components/UserHeader'
+import UserHeader from '@/deprecated DO NOT USE/UserHeader'
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import TournamentHome from './TournamentHome'
+import TournamentHome from '../user/tabs/TournamentHome'
 import TrophyIcon from '@/components/ui/trophy-icon'
 
 function Tournament() {

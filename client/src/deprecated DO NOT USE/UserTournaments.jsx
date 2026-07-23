@@ -1,5 +1,5 @@
 import React from 'react'
-import UserHeader from '../components/UserHeader'
+import UserHeader from './UserHeader'
 
 
 function UserTournaments() {

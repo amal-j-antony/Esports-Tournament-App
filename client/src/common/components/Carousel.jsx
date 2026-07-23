@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { carouselImages } from '@/data/heroCarousel'
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+
 
 function Carousel() {
     const [carouselCurrent, setCarouselCurrent] = useState(0)
     const [carouselPrev, setCarouselPrev] = useState(null)
     const [carouselDirection, setCarouselDirection] = useState("")
+    const navigate = useNavigate()
     const handleCarousel = (operation) => {
         if (operation == "increment") {
             setCarouselDirection("next")
@@ -57,7 +61,10 @@ function Carousel() {
                             onAnimationEnd={() => setCarouselPrev(null)} key={item.id} className={handleCarouselDirection(index)}>
                             <img className='w-full h-[80vh] object-cover' src={item.url} alt="" />
                             <div className="absolute inset-0 w-full h-full bg-[rgb(0,0,0,0.5)] grid grid-cols-2">                                
-                                    <img src={item.gameThumbnail} className='w-80 justify-self-center self-center rounded-2xl' alt="" />                                
+                                    <div className='justify-self-center self-center mt-15'>
+                                        <img src={item.gameThumbnail} className='w-80 justify-self-center self-center rounded-2xl' alt="" />     
+                                        <Button onClick={()=>navigate("/login")} className='mt-5 w-full p-9 text-xl cursor-pointer duration-500 hover:bg-card text-white bg-accent-foreground'>Play now</Button> 
+                                    </div>                         
                             </div>
                         </div>
                     ))

@@ -16,9 +16,11 @@ import Footer from '../components/Footer';
 import { Calendar, Gamepad, Gamepad2, List } from 'lucide-react'
 import { FaExclamation, FaPlay, FaTrophy, FaUser } from 'react-icons/fa'
 import { FaUserGroup } from 'react-icons/fa6'
+import { useNavigate } from 'react-router-dom';
 
 
 function Home() {
+    const navigate = useNavigate()
 
     return (
         <>
@@ -45,7 +47,7 @@ function Home() {
                         <div className="absolute inset-0  rounded-3xl bg-[rgb(0,0,0,0.8)] flex justify-center items-center flex-col gap-10">
                             
                             <TrophyIcon size={200} className="z-2" />
-                            <button className=' border border-white  rounded-3xl bg-accent-f p-5 text-xl items-center gap-2 hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer flex'>
+                            <button onClick={()=>navigate("/login")} className=' border border-white  rounded-3xl bg-accent-f p-5 text-xl items-center gap-2 hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer flex'>
                                 
                                 Create and organize tournaments <ArrowRight/></button>
                             
@@ -56,7 +58,7 @@ function Home() {
                     <div className="relative flex justify-center">
                         <div className="absolute inset-0  rounded-3xl bg-[rgb(0,0,0,0.8)] flex justify-center items-center flex-col gap-10">
                             <GamepadIcon size={200} className="z-2" />
-                            <button className=' border border-white rounded-3xl p-5 text-xl items-center gap-2 hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer flex'>Participate in Tournaments <ArrowRight/></button>
+                            <button onClick={()=>navigate("/login")}  className=' border border-white rounded-3xl p-5 text-xl items-center gap-2 hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer flex'>Participate in Tournaments <ArrowRight/></button>
                         </div>
                         <img className='h-150 object-cover rounded-3xl' src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784347862/2149529367_bd2ylr.jpg" alt="" />
 
@@ -69,8 +71,8 @@ function Home() {
                     <div className="absolute top-0 w-full h-full rounded-3xl flex flex-col justify-center items-center z-2 bg-[rgba(0,0,0,0.5)]">
                         <p className='text-6xl text-center font-bold'>Assemble a crew and conquer the arena</p>
                         <div className="flex justify-center gap-10 p-10 w-1/3">
-                            <button className='p-5 bg-[rgb(0,0,0,0.8)] border border-white hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer rounded-3xl text-xl font-bold'>Create a Squad</button>
-                            <button className='p-5 bg-[rgb(0,0,0,0.8)] border border-white hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer rounded-3xl text-xl font-bold'>Join a squad</button>
+                            <button onClick={()=>navigate("/login")}  className='p-5 bg-[rgb(0,0,0,0.8)] border border-white hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer rounded-3xl text-xl font-bold'>Create a Squad</button>
+                            <button onClick={()=>navigate("/login")}  className='p-5 bg-[rgb(0,0,0,0.8)] border border-white hover:bg-[#BA181B] hover:border-[#BA181B] duration-500 cursor-pointer rounded-3xl text-xl font-bold'>Join a squad</button>
                         </div>
                     </div>
                     <img src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784391819/call-of-duty-modern-warfare-2-war-zone-ghost-2022-games-3840x2160-8542_v9ju7x.jpg" className='rounded-3xl' alt="" />

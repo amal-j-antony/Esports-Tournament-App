@@ -11,6 +11,7 @@ export const esportsTitles = [
     minTeamSize: 5,
     maxTeamSize: 5,
     platform: ["PC"],
+    image: "https://res.cloudinary.com/dwaaoyztz/image/upload/v1784260780/Cs2_boxart_yvxpba.webp",
     config: {
       format: SERIES_FORMAT.BEST_OF
     }
@@ -23,6 +24,7 @@ export const esportsTitles = [
     minTeamSize: 5,
     maxTeamSize: 5,
     platform: ["PC"],
+    image: "https://m.media-amazon.com/images/M/MV5BMmEzYzQ2ZGQtNmU2NC00ZDFkLTg4NWItNDQwZGM0OTlkMWYyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
     config: {
       format: SERIES_FORMAT.BEST_OF
     }
@@ -59,6 +61,7 @@ export const esportsTitles = [
     minTeamSize: 5,
     maxTeamSize: 5,
     platform: ["Mobile"],
+    image: "https://m.media-amazon.com/images/M/MV5BODhlZDk5Y2EtMGFhOS00MTQ5LTgwNjgtYTI2ZmE1Y2ZjMDE2XkEyXkFqcGc@._V1_.jpg",
     config: {
       format: SERIES_FORMAT.BEST_OF
     }

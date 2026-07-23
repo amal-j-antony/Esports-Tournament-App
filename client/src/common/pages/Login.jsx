@@ -41,7 +41,7 @@ function Login() {
                         }
                     </div>
 
-                    <Link to={"/user/1/dashboard"} className='bg-red-900 p-3 rounded-xl cursor-pointer text-center' >Log In</Link>
+                    <Link to={"/dashboard/popular"} className='bg-red-900 p-3 rounded-xl cursor-pointer text-center' >Log In</Link>
                     <Link to={"/register"} className='border p-2 rounded-xl text-sm cursor-pointer bg-[rgba(255,255,255,0.1)] flex justify-center items-center' >Dont have an account? Sign up Now <ArrowRight /></Link>
                 </section>
             </main>
