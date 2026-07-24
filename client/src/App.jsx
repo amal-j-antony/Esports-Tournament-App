@@ -6,10 +6,7 @@ import 'animate.css';
 import PageNotFound from './common/pages/PageNotFound';
 import Login from './common/pages/Login';
 import Register from './common/pages/Register';
-import UserDashboard from './deprecated DO NOT USE/UserDashboard';
 import LeaderBoard from './common/pages/LeaderBoard';
-import UserTournaments from './deprecated DO NOT USE/UserTournaments';
-import Tournament from './deprecated DO NOT USE/Tournament';
 import TournamentDetails from './tournaments/TournamentDetails';
 import CreateTournament from './tournaments/CreateTournament';
 import Popular from './user/pages/Popular';
@@ -19,6 +16,7 @@ import Notifications from './user/pages/Notifications';
 import Profile from './user/pages/Profile';
 import Messages from './user/pages/Messages';
 import Clan from './user/pages/Clan';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 
 function App() {
@@ -29,15 +27,15 @@ function App() {
       <Routes>
         {/* Home */}
         <Route path='/' element={<Home />} />
-        <Route path='/createTournament' element={<CreateTournament/>} />
+        <Route path='/createTournament' element={<CreateTournament />} />
         {/* login */}
-        <Route path='/login' element={<Login/>} />
+        <Route path='/login' element={<Login />} />
         {/* register */}
-        <Route path='/register' element={<Register/>} />
+        <Route path='/register' element={<Register />} />
         {/* dashboard: popular */}
-        <Route path='/dashboard/popular' element={<Popular/>} />
+        <Route path='/dashboard/popular' element={<Popular />} />
         {/* dashboard: tournaments*/}
-        <Route path='/dashboard/tournaments' element={<Tournaments/>} />
+        <Route path='/dashboard/tournaments' element={<Tournaments />} />
         {/* dashboard: squads*/}
         <Route path='/dashboard/squads' element={<Squads />} />
         {/* dashboard: notiications*/}
@@ -51,12 +49,25 @@ function App() {
         {/* game page */}
         <Route path='/user/:id/tournaments/:game' />
         {/* tournament details */}
-        <Route path='/tournaments/:tournamentID' element={<TournamentDetails/>} />
+        <Route path='/tournaments/:tournamentID' element={<TournamentDetails />} />
         {/* Leaderboard */}
-        <Route path='/user/:id/leaderboard/' element={<LeaderBoard/>} />
+        <Route path='/user/:id/leaderboard/' element={<LeaderBoard />} />
         {/* Page not found */}
-        <Route path='/*' element={<PageNotFound/>} />
+        <Route path='/*' element={<PageNotFound />} />
       </Routes>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
     </>
   )
 }
@@ -64,5 +75,5 @@ function App() {
 export default App
 
 
- {/* discover tournament old */}
-        {/* <Route path='/user/:id/tournaments/' element={<Tournament/>} /> */}
+{/* discover tournament old */ }
+{/* <Route path='/user/:id/tournaments/' element={<Tournament/>} /> */ }

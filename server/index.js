@@ -1,5 +1,5 @@
 
-require("dotenv")
+require("dotenv").config()
 
 const express = require("express")
 
@@ -17,7 +17,7 @@ server.use(express.json())
 
 server.use(router)
 
-const port = process.env.PORT
+const PORT = process.env.PORT
 
 server.listen(PORT, ()=> {
     console.log(`Server started at ${PORT} `);

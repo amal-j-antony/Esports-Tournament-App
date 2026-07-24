@@ -15,9 +15,9 @@ function FloatingHeader({showFloatingHeader}) {
             ease: "easeIn"
         }}
         className='w-full grid justify-center items-center fixed top-0 z-20'>
-            <section className='px-10 flex gap-30 bg-black/80 rounded-3xl'>
+            <section className='px-10 flex gap-50 bg-card rounded-3xl'>
                 <img className='h-20' src="https://res.cloudinary.com/dwaaoyztz/image/upload/q_auto/v1784428720/FIERZIO.gg_3_-Photoroom_npjprr.png" alt="" />
-                <ul className='flex items-center gap-5'>
+                <ul className='flex items-center gap-5 bg-'>
                     <button className={buttonStyle}>Tournaments</button>
                     <button className={buttonStyle}>Leaderboard</button>
                     <button className={buttonStyle} >Log In</button>

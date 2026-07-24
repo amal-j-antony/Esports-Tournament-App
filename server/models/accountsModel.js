@@ -22,3 +22,6 @@ const accountSchema = new mongoose.Schema({
         default: "https://res.cloudinary.com/dwaaoyztz/image/upload/q_auto/v1783662948/copy_of_vecteezy_profile-icon-stock-vector-illustration_35112749_sw84ny.jpg"
     }
 })
+
+const accounts = mongoose.model("accounts",accountSchema)
+module.exports = accounts

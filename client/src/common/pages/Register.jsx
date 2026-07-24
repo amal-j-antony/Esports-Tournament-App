@@ -4,6 +4,9 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
 import z from 'zod';
+import { userData } from 'three/src/nodes/accessors/UserDataNode.js';
+import { registerAccountAPI } from '@/services/accountMethods';
+import { toast } from 'react-toastify';
 
 
 
@@ -17,7 +20,7 @@ function Register() {
         email: "",
         agreement: false,
     })
-    const [errors,setErros] = useState({})
+    const [errors,setErrors] = useState({})
     console.log(errors.email);
     
     console.log(registerData);
@@ -50,10 +53,32 @@ function Register() {
 
     const validate = () => {
         const result = registerSchema.safeParse(registerData)
-        if(!result.success){
+        console.log("zod",result);
+        
+        if(result.success){
+            const newAccount = {
+                username: registerData.username,
+                email: registerData.email,
+                password: registerData.password
+            }
+            registerAccount(newAccount)
+
+        }else{
             const tree = z.treeifyError(result.error)
             console.log(tree.properties);
-            setErros(tree.properties)
+            setErrors(tree.properties)
+            toast.error("Something went wrong, please check if all fields are filled")
+        }
+        
+    }
+
+    const registerAccount = async (data) => {
+        const result = await registerAccountAPI(data)
+        console.log(result);
+        if (result.status === 201) {
+            toast.success("Account registered successfully")
+        }else{
+            toast.error("Something went wrong")
         }
         
     }
@@ -85,7 +110,7 @@ function Register() {
                     <input value={registerData.username} onChange={(e) => handleInputChange(e, "username")} type="text" placeholder='Enter username' className='p-3 bg-[rgba(255,255,255,0.1)] rounded-xl w-full' />
                     {errors?.username?.errors[0] && <h1>{errors.username.errors[0]}</h1> }
                     <input value={registerData.email} onChange={(e) => handleInputChange(e, "email")} type="email" placeholder='Enter email' className='p-3 bg-[rgba(255,255,255,0.1)] rounded-xl w-full' />
-                    {errors?.email?.errors[0] && <h1 className='text-red-500' >Error: {errors.email.errors[0]}</h1> }
+                    {errors?.email?.errors[0] && <h1 className='text-yellow-500' >Error: {errors.email.errors[0]}</h1> }
                     <div className='relative w-full'>
                         <input value={registerData.password} onChange={(e) => handleInputChange(e, "password")} type={view ? "text" : "password"} placeholder='Enter Password' className='p-3 bg-[rgba(255,255,255,0.1)] rounded-xl w-full' />
                         {
@@ -94,22 +119,22 @@ function Register() {
                         }
 
                     </div>
-                    {errors?.password?.errors[0] && <h1 className='text-red-500' >Error: {errors.password.errors[0]}</h1> }
+                    {errors?.password?.errors[0] && <h1 className='text-yellow-500' >Error: {errors.password.errors[0]}</h1> }
                     <div className='relative w-full'>
                         <input value={registerData.confirm} onChange={(e) => handleInputChange(e, "confirm")} type={viewConfirm ? "text" : "password"} placeholder='Confirm Password' className='p-3 bg-[rgba(255,255,255,0.1)] rounded-xl w-full' />
                         {
-                            view ? <Eye onClick={() => setViewConfirm(!viewConfirm)} className='absolute right-3 top-1/4' />
+                            viewConfirm ? <Eye onClick={() => setViewConfirm(!viewConfirm)} className='absolute right-3 top-1/4' />
                                 : <EyeOff onClick={() => setViewConfirm(!viewConfirm)} className='absolute right-3 top-1/4' />
                         }
                     </div>
-                    {errors?.confirm?.errors[0] && <h1 className='text-red-500' >Error: {errors.confirm.errors[0]}</h1> }
+                    {errors?.confirm?.errors[0] && <h1 className='text-yellow-500' >Error: {errors.confirm.errors[0]}</h1> }
                     <div className=''>
                         <input onChange={(e) => handleInputChange(e, "agreement")} className='' type="checkbox" name="" id="" />
                         <span className='ps-3 text-center'>I accept the terms and conditions and privacy policy</span>
                     </div>
-                    {errors?.agreement?.errors[0] && <h1 className='text-red-500' >Error: {errors.agreement.errors[0]}</h1> }
+                    {errors?.agreement?.errors[0] && <h1 className='text-yellow-500' >Error: {errors.agreement.errors[0]}</h1> }
                     <button onClick={validate} className='bg-red-900 p-3 rounded-xl text-center' >Create Account</button>
-                    <Link to={"/register"} className='border p-2 rounded-xl text-sm cursor-pointer bg-[rgba(255,255,255,0.1)] flex justify-center items-center' >Already have an account? Log in <ArrowRight /></Link>
+                    <Link to={"/login"} className='border p-2 rounded-xl text-sm cursor-pointer bg-[rgba(255,255,255,0.1)] flex justify-center items-center' >Already have an account? Log in <ArrowRight /></Link>
                 </section>
             </main>
         </>
