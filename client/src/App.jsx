@@ -33,7 +33,7 @@ function App() {
         {/* register */}
         <Route path='/register' element={<Register />} />
         {/* dashboard: popular */}
-        <Route path='/dashboard/popular' element={<Popular />} />
+        <Route path='/dashboard/discover' element={<Popular />} />
         {/* dashboard: tournaments*/}
         <Route path='/dashboard/tournaments' element={<Tournaments />} />
         {/* dashboard: squads*/}
@@ -45,9 +45,7 @@ function App() {
         {/* dashboard: messages*/}
         <Route path='/dashboard/messages' element={<Messages />} />
         {/* dashboard: clan*/}
-        <Route path='/dashboard/clan' element={<Clan />} />
-        {/* game page */}
-        <Route path='/user/:id/tournaments/:game' />
+        <Route path='/dashboard/clan' element={<Clan />} />        
         {/* tournament details */}
         <Route path='/tournaments/:tournamentID' element={<TournamentDetails />} />
         {/* Leaderboard */}

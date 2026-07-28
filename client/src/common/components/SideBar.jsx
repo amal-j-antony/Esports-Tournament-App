@@ -32,12 +32,11 @@ function SideBar({login,currentTab}) {
   const manageTab = (value) => {
     if (value != tab) {
       setTab(value)      
+      navigate(`/dashboard/${value}`)
     }
   }
 
-  useEffect(()=>{
-    navigate(`/dashboard/${tab}`)
-  },[tab])
+  
   return (
     <>
       {/* sidebar */}
@@ -45,7 +44,7 @@ function SideBar({login,currentTab}) {
         <ul className='w-full flex flex-col items-center'>
           <img onClick={() => navigate("/")} className="h-40 cursor-pointer" src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784428720/FIERZIO.gg_3_-Photoroom_npjprr.png" alt="" />
           <li onClick={() => {manageTab("tournaments")}} className={sidebarButtons("tournaments")}><FaTrophy /> Tournaments</li>
-          <li onClick={() => manageTab("popular")} className={sidebarButtons("popular")} ><FaExclamation /> Popular</li>
+          <li onClick={() => manageTab("discover")} className={sidebarButtons("discover")} ><FaExclamation /> Discover</li>
           <li onClick={() => manageTab("squads")} className={sidebarButtons("squads")} ><FaUserGroup />Squad</li>
           <li onClick={() => manageTab("clan")} className={sidebarButtons("clan")} ><FaPeopleGroup />Clan</li>
           <li onClick={() => manageTab("notifications")} className={sidebarButtons("notifications")} ><IoMdNotifications />Notifications</li>

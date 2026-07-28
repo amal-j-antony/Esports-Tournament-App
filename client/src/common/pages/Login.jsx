@@ -49,6 +49,7 @@ function Login() {
         if(result.status === 200){
             toast.success("Login successful")
             navigate("/dashboard/popular")
+            
         }else{
             toast.error("Something went wrong")
         }
