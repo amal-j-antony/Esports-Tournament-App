@@ -3,16 +3,16 @@ const bcrypt = require("bcrypt")
 const accounts = require("../models/accountsModel")
 const crypto = require("crypto")
 
-exports.registerController = async (req,res) => {
+exports.registerController = async (req, res) => {
     console.log('Inside register function');
     console.log(req.body);
-    const { username, email, password} = req.body
-    
-    const existingUser = await accounts.findOne({email})
-    if(existingUser){
+    const { username, email, password } = req.body
+
+    const existingUser = await accounts.findOne({ email })
+    if (existingUser) {
         res.status(409).json("Error: Account Exists")
-    }else{
-        const encryptedPw = await bcrypt.hash(password,10)
+    } else {
+        const encryptedPw = await bcrypt.hash(password, 10)
         const newUser = await accounts.create({
             username,
             email,
@@ -24,27 +24,50 @@ exports.registerController = async (req,res) => {
 }
 
 //login
-exports.loginController = async(req,res) => {
+exports.loginController = async (req, res) => {
     console.log('LoginController initialized');
     console.log(req.body);
-    const {email, password} = req.body
-    const existingUser = await accounts.findOne({email})
-    if(existingUser){
-        const comparisonResult = bcrypt.compare(password,existingUser.password)
-        const refreshToken = crypto.randomBytes(64).toString("hex")
-        if(comparisonResult){
+    const { email, password } = req.body
+    const existingUser = await accounts.findOne({ email })
+    if (existingUser) {
+        const comparisonResult = bcrypt.compare(password, existingUser.password)
+
+        if (comparisonResult) {
+            const refreshToken = jwt.sign(
+                { role: existingUser.role, userID: existingUser._id },
+                process.env.REFRESH_TOKEN_KEY,
+                
+            )
+
             const token = jwt.sign(
-                {usermail: email, role: existingUser.role}
-                ,process.env.JWT_KEY,
+                { role: existingUser.role, userID: existingUser._id }
+                , process.env.JWT_KEY,
                 {
                     expiresIn: "30m"
                 })
-            res.status(200).json({account: existingUser, token})
-        }else{
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" 
+                        ? "None"
+                        : "Lax",
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            })
+            const frontendPayload = {
+                username: existingUser.username,
+                email: existingUser.email,
+                avatar: existingUser.avatar,
+                role: existingUser.role,
+                userID: existingUser._id
+            }
+            
+            res.status(200).json({ account: frontendPayload, token })
+        } else {
             res.status(409).json("Invalid credentials")
         }
-    }else{
+    } else {
         res.status(400).json("Account does not exist, please register")
     }
-    
+
 }

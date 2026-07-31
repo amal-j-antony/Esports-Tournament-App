@@ -15,7 +15,7 @@ const accountSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: "PLAYER"
+        default: "USER"
     },
     avatar: {
         type: String,

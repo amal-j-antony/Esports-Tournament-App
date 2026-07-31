@@ -13,7 +13,7 @@ import { ArrowLeftCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Textarea } from "@/components/ui/textarea"
 import CreateStepOne from './CreateStepOne';
-import TournamentDetails from './TournamentDetails';
+import TournamentDetails from '../Tournament_Details/TournamentDetails';
 import CreateSidebar from './CreateSidebar';
 import CreateStepTwo from './CreateStepTwo';
 import CreateStepThree from './CreateStepThree';

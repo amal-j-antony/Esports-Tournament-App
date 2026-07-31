@@ -7,19 +7,23 @@ import { FaExclamation, FaTrophy, FaUser } from "react-icons/fa";
 import Header from '@/common/components/Header'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { logoutAccoutAPI } from "@/services/accountMethods";
+import { toast } from "react-toastify";
+import { useAuth } from "@/context/AuthProvider";
 
 function SideBar({login,currentTab}) {
+  const { logout,user } = useAuth()
   const navigate = useNavigate()
 
   const sidebarButtons = (value) => {
     if (tab == value) {
-      return "py-3 text- bg-accent-foreground ps-4 w-9/10 rounded-xl border border-accent duration-500 cursor-pointer flex items-center gap-2"
+      return "py-3 text- bg-accent ps-4 w-9/10 rounded-xl  duration-500 cursor-pointer flex items-center gap-2"
     }
     else if (value == "logout") {
-      return "py-3 text- hover:bg-accent-foreground ps-4 w-9/10 rounded-xl  duration-500 cursor-pointer flex items-center gap-2"
+      return "py-3 text- hover:text-accent-foreground ps-4 w-9/10 rounded-xl  duration-500 cursor-pointer flex items-center gap-2"
     }
     else {
-      return "py-3 text- hover:bg-accent-foreground ps-4 w-9/10 rounded-xl  duration-500 cursor-pointer flex items-center gap-2"
+      return "py-3 text- hover:text-accent-foreground ps-4 w-9/10 rounded-xl  duration-500 cursor-pointer flex items-center gap-2"
     }
   }
 
@@ -32,9 +36,11 @@ function SideBar({login,currentTab}) {
   const manageTab = (value) => {
     if (value != tab) {
       setTab(value)      
-      navigate(`/dashboard/${value}`)
+      navigate(`/dashboard/${value}/${user.userID}`)
     }
   }
+
+  
 
   
   return (
@@ -51,7 +57,7 @@ function SideBar({login,currentTab}) {
           <li onClick={() => manageTab("messages")} className={sidebarButtons("messages")} ><TbMessagesFilled />Messages</li>
           <li onClick={() => manageTab("profile")} className={sidebarButtons("profile")} ><FaUser />Profile</li>
 
-          <li className={sidebarButtons("logout")} ><IoLogOutSharp />Log out</li>
+          <li onClick={logout} className={sidebarButtons("logout")} ><IoLogOutSharp />Log out</li>
         </ul>
       </section>
       {/* components */}

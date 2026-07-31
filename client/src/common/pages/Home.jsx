@@ -24,7 +24,7 @@ function Home() {
     const navigate = useNavigate()
     const [showFloatingHeader, setShowFloatingHeader] = useState(false)
     const headerRef = useRef()
-    console.log(headerRef);
+    // console.log(headerRef);
 
 
     useEffect(() => {

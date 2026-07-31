@@ -6,8 +6,11 @@ import { AiFillHome } from "react-icons/ai";
 import z, { email } from 'zod';
 import { loginToAccountAPI } from '@/services/accountMethods';
 import { toast } from 'react-toastify';
+import { useAuth } from '@/context/AuthProvider';
+import { axiosInstance } from '@/services/axiosInstance';
 
 function Login() {
+    const { login , updateToken ,user  } = useAuth()
     const navigate = useNavigate()
     const [view, setView] = useState(false)
     const [errors,setErrors] = useState({})
@@ -48,7 +51,10 @@ function Login() {
         console.log(result);
         if(result.status === 200){
             toast.success("Login successful")
-            navigate("/dashboard/popular")
+            login(result.data.account)
+            updateToken(result.data.token)
+            axiosInstance.defaults.headers.common.Authorization = `Bearer ${result.data.token}`
+            navigate(`/dashboard/discover/${result.data.account?.userID}`)
             
         }else{
             toast.error("Something went wrong")
