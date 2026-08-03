@@ -1,4 +1,5 @@
 export const SERIES_FORMAT = {
-    BEST_OF: "bestOf",
-    MATCH_COUNT: "matchCount"
+    HEAD_TO_HEAD: "headTohead",
+    LOBBY: "lobby"
 }
+

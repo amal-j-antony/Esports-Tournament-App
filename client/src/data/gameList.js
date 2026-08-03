@@ -13,7 +13,7 @@ export const esportsTitles = [
     platform: ["PC"],
     image: "https://res.cloudinary.com/dwaaoyztz/image/upload/v1784260780/Cs2_boxart_yvxpba.webp",
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -26,7 +26,7 @@ export const esportsTitles = [
     platform: ["PC"],
     image: "https://m.media-amazon.com/images/M/MV5BMmEzYzQ2ZGQtNmU2NC00ZDFkLTg4NWItNDQwZGM0OTlkMWYyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -38,7 +38,7 @@ export const esportsTitles = [
     maxTeamSize: 5,
     platform: ["PC"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -50,7 +50,7 @@ export const esportsTitles = [
     maxTeamSize: 5,
     platform: ["PC"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -63,7 +63,7 @@ export const esportsTitles = [
     platform: ["Mobile"],
     image: "https://m.media-amazon.com/images/M/MV5BODhlZDk5Y2EtMGFhOS00MTQ5LTgwNjgtYTI2ZmE1Y2ZjMDE2XkEyXkFqcGc@._V1_.jpg",
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -75,7 +75,7 @@ export const esportsTitles = [
     maxTeamSize: 4,
     platform: ["Mobile"],
     config: {
-      format: SERIES_FORMAT.MATCH_COUNT
+      format: SERIES_FORMAT.LOBBY
     }
   },
   {
@@ -87,7 +87,7 @@ export const esportsTitles = [
     maxTeamSize: 4,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.MATCH_COUNT
+      format: SERIES_FORMAT.LOBBY
     }
   },
   {
@@ -99,7 +99,7 @@ export const esportsTitles = [
     maxTeamSize: 3,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.MATCH_COUNT
+      format: SERIES_FORMAT.LOBBY
     }
   },
   {
@@ -111,7 +111,7 @@ export const esportsTitles = [
     maxTeamSize: 3,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -123,7 +123,7 @@ export const esportsTitles = [
     maxTeamSize: 5,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -135,7 +135,7 @@ export const esportsTitles = [
     maxTeamSize: 5,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -147,7 +147,7 @@ export const esportsTitles = [
     maxTeamSize: 4,
     platform: ["Mobile"],
     config: {
-      format: SERIES_FORMAT.MATCH_COUNT
+      format: SERIES_FORMAT.LOBBY
     }
   },
   {
@@ -159,7 +159,7 @@ export const esportsTitles = [
     maxTeamSize: 5,
     platform: ["Mobile"],
     config: {
-      format: SERIES_FORMAT.MATCH_COUNT
+      format: SERIES_FORMAT.LOBBY
     }
   },
   {
@@ -171,7 +171,7 @@ export const esportsTitles = [
     maxTeamSize: 5,
     platform: ["Mobile"],
     config: {
-      format: SERIES_FORMAT.MATCH_COUNT
+      format: SERIES_FORMAT.LOBBY
     }
   },
   {
@@ -183,7 +183,7 @@ export const esportsTitles = [
     maxTeamSize: 1,
     platform: ["PC", "Mobile"],
     config: {
-      format: SERIES_FORMAT.MATCH_COUNT
+      format: SERIES_FORMAT.LOBBY
     }
   },
   {
@@ -195,7 +195,7 @@ export const esportsTitles = [
     maxTeamSize: 1,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -207,7 +207,7 @@ export const esportsTitles = [
     maxTeamSize: 1,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -219,7 +219,7 @@ export const esportsTitles = [
     maxTeamSize: 2,
     platform: ["PC", "Console"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -231,7 +231,7 @@ export const esportsTitles = [
     maxTeamSize: 1,
     platform: ["PC"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
   {
@@ -243,7 +243,7 @@ export const esportsTitles = [
     maxTeamSize: 1,
     platform: ["PC", "Mobile"],
     config: {
-      format: SERIES_FORMAT.BEST_OF
+      format: SERIES_FORMAT.HEAD_TO_HEAD
     }
   },
 ];

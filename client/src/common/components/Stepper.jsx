@@ -4,10 +4,11 @@ import { FaCheck } from 'react-icons/fa6'
 function Stepper({steps}) {
     const firstStep = steps[0]
     const lastStep = steps[steps.length - 1]
+    const gridLength = steps.length
     const [activeStep,setActiveStep] = useState(1)
   return (
     <>
-        <main className={`w-full grid grid-cols-${steps.length} gap-0 gap-y-5`}>
+        <main className={`w-full grid grid-cols-5 gap-0 gap-y-5`}>
             
                 {steps.map((item,index)=> (
                     <div className='col-span-1 flex items-center' key={"fasdf"+index}>

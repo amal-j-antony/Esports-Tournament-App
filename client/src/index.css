@@ -140,3 +140,25 @@
     @apply font-sans;
     }
 }
+
+
+/* use when u use text and icons in the same element */
+.textAndIcon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flexMain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.flexCol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

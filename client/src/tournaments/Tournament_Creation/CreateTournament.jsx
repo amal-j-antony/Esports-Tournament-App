@@ -1,42 +1,15 @@
 import React, { useState } from 'react'
-import {
-    Stepper,
-    StepperIndicator,
-    StepperItem,
-    StepperSeparator,
-    StepperTrigger,
-} from "@/components/ui/stepper";
 import { esportsTitles } from '@/data/gameList'
-
-import { Input } from '@/components/ui/input';
-import { ArrowLeftCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Textarea } from "@/components/ui/textarea"
 import CreateStepOne from './CreateStepOne';
-import TournamentDetails from '../Tournament_Details/TournamentDetails';
 import CreateSidebar from './CreateSidebar';
 import CreateStepTwo from './CreateStepTwo';
 import CreateStepThree from './CreateStepThree';
+import { useForm } from 'react-hook-form';
+import TournamentPreview from './TournamentPreview';
+import CreateStepFour from './CreateStepFour';
+import CreateStepFive from './CreateStepFive';
 
 function CreateTournament() {
-    const [tournamentDetails, setTournamentDetails] = useState({
-        name: "",
-        game: "",
-        image: "",
-        description: "",
-        type: "",
-        rounds: "",
-        teamSize: 0,
-        teamCount: 0,
-        public: true,
-        registrationDate: "",
-        checkIn: true,
-        requirements: "",
-        startDate: "",
-        timezone: "",
-        prizePool: "",
-        rules: ""
-    })
     const gameMap = new Map()
     esportsTitles.forEach(item => gameMap.set(item.name, item))
     console.log(gameMap);
@@ -63,23 +36,76 @@ function CreateTournament() {
 
 
     }
+
+
+
+    const {
+        register,
+        control,
+        handleSubmit,
+        watch,
+        getValues,
+        setValues,
+        setValue
+    } = useForm({
+        defaultValues: {
+            name: "",
+            game: "",
+            image: "",
+            description: "",
+            banner: "",
+            inviteOnly: false,
+            maxTeamSize: 8,
+            minTeamSize: 4,
+            format: "",
+            hostMode: "",
+            groupStage: {
+                enabled: true,
+                stageFormat: "",
+                groupCount: 2,
+                roundsCount: 3,
+                matchcount: 0
+            },
+            mainStage: {
+                stageFormat: "",
+                groupCount: 2,
+                roundsCount: 3,
+                matchcount: 0
+            },
+            rules: [],
+            rewards: {
+                enabled: true
+            },
+            registrationDate: "",
+            checkIn: true,
+            requirements: "",
+            startDate: "",
+        }
+    })
+
+    const output = watch()
+    console.log(output);
+
+
     return (
         <>
 
             <div className='grid grid-cols-7 gap-1'>
                 <CreateSidebar
+                    className="row-span-2"
                     activeStep={activeStep}
                     setActiveStep={setActiveStep}
                     handleStepChange={handleStepChange}
                 />
-                <main className='col-span-6 w-full h-screen flex flex-col items-center p-10 gap-5' style={{
-                    backgroundImage: 'url("https://res.cloudinary.com/dwaaoyztz/image/upload/v1784831009/Untitled_design_5_pmkean.png")',
-                    backgroundSize: "cover"
-                }}>
 
-                    <h1 className='text-3xl font-bold'>CREATE TOURNAMENT</h1>
+                <main className='col-span-4 w-full h-full min-h-screen flex flex-col items-center p-10 gap-5 bg-card' >
+
+
+                    <h1 className='text-3xl w-full font-bold'>Create Tournament</h1>
+                    <input type="text" className='w-full bg-[#1a1a1a] px-5 py-2 rounded-2xl border' placeholder='Search for an option' />
+
                     {/* stepper */}
-                    <section className='p-10'>
+                    {/* <section className='p-10'>
                         <Stepper value={activeStep} onValueChange={setActiveStep}>
                             {steps.map((step) => (
                                 <StepperItem className="not-last:flex-1" key={step} step={step}>
@@ -95,15 +121,15 @@ function CreateTournament() {
                             ))}
                         </Stepper>
 
-                    </section>
+                    </section> */}
 
                     {/* step 1 */}
                     {
                         activeStep == 1 &&
                         <CreateStepOne
-                            gameNames={gameNames}
-                            setTournamentDetails={setTournamentDetails}
-                            tournamentDetails={tournamentDetails}
+                            setValue={setValue}
+                            control={control}
+                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
                         />
@@ -113,8 +139,8 @@ function CreateTournament() {
                         activeStep == 2 &&
                         <CreateStepTwo
                             gameNames={gameNames}
-                            setTournamentDetails={setTournamentDetails}
-                            tournamentDetails={tournamentDetails}
+                            control={control}
+                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
                         />
@@ -125,8 +151,8 @@ function CreateTournament() {
                         activeStep == 3 &&
                         <CreateStepThree
                             gameNames={gameNames}
-                            setTournamentDetails={setTournamentDetails}
-                            tournamentDetails={tournamentDetails}
+                            control={control}
+                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
                         />
@@ -135,9 +161,23 @@ function CreateTournament() {
                     {
                         //step 4
                         activeStep == 4 &&
-                        <section>
-                            STEP 4
-                        </section>
+                        <CreateStepFour
+                            control={control}
+                            register={register}
+                            activeStep={activeStep}
+                            setActiveStep={setActiveStep}
+                        />
+                    }
+
+                    {
+                        //step 5
+                        activeStep == 5 &&
+                        <CreateStepFive
+                            control={control}
+                            register={register}
+                            activeStep={activeStep}
+                            setActiveStep={setActiveStep}
+                        />
                     }
 
                     <div className="flex justify-center gap-5 my-5">
@@ -145,6 +185,10 @@ function CreateTournament() {
                         <button onClick={() => handleStepChange("next")} className='border border-accent p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
                     </div>
                 </main>
+
+                <section className='col-span-2 bg-card'>
+                    <TournamentPreview />
+                </section>
             </div>
 
         </>
@@ -152,3 +196,37 @@ function CreateTournament() {
 }
 
 export default CreateTournament
+
+// const [tournamentDetails, setTournamentDetails] = useState({
+//         name: "",
+//         game: "",
+//         image: "",
+//         description: "",
+//         banner: "",
+//         inviteOnly: false,
+//         maxTeamSize: 0,
+//         minTeamSize: 0,
+//         format: "",
+//         hostMode: "",
+//         groupStage: {
+//             enabled: true,
+//             stageFormat: "",
+//             groupCount: 2,
+//             roundsCount: 3,
+//             matchcount: 0
+//         },
+//         mainStage: {
+//             stageFormat: "",
+//             groupCount: 2,
+//             roundsCount: 3,
+//             matchcount: 0
+//         },
+//         rules: [],
+//         rewards: {
+//             enabled: true
+//         },
+//         registrationDate: "",
+//         checkIn: true,
+//         requirements: "",
+//         startDate: "",
+//     })
