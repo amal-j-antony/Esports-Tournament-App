@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import TournamentPreview from './TournamentPreview';
 import CreateStepFour from './CreateStepFour';
 import CreateStepFive from './CreateStepFive';
+import SideBar from '@/common/components/SideBar';
 
 function CreateTournament() {
     const gameMap = new Map()
@@ -98,31 +99,11 @@ function CreateTournament() {
                     handleStepChange={handleStepChange}
                 />
 
-                <main className='col-span-4 w-full h-full min-h-screen flex flex-col items-center p-10 gap-5 bg-card' >
+                <main className='col-span-5 w-full h-full min-h-screen flex flex-col items-center p-10 gap-5 bg-card' >
 
 
                     <h1 className='text-3xl w-full font-bold'>Create Tournament</h1>
                     <input type="text" className='w-full bg-[#1a1a1a] px-5 py-2 rounded-2xl border' placeholder='Search for an option' />
-
-                    {/* stepper */}
-                    {/* <section className='p-10'>
-                        <Stepper value={activeStep} onValueChange={setActiveStep}>
-                            {steps.map((step) => (
-                                <StepperItem className="not-last:flex-1" key={step} step={step}>
-                                    {step < steps.length && <StepperSeparator />}
-                                    <StepperTrigger>
-                                        <StepperIndicator className="" />
-                                        {
-                                            step < steps.length && <hr className='border-accent w-35 border' />
-                                        }
-                                    </StepperTrigger>
-                                    {step < steps.length && <StepperSeparator />}
-                                </StepperItem>
-                            ))}
-                        </Stepper>
-
-                    </section> */}
-
                     {/* step 1 */}
                     {
                         activeStep == 1 &&
@@ -186,8 +167,8 @@ function CreateTournament() {
                     </div>
                 </main>
 
-                <section className='col-span-2 bg-card'>
-                    <TournamentPreview />
+                <section className='col-span-1 bg-card'>
+                    <SideBar />
                 </section>
             </div>
 
@@ -230,3 +211,23 @@ export default CreateTournament
 //         requirements: "",
 //         startDate: "",
 //     })
+
+
+{/* stepper */ }
+// <section className='p-10'>
+//     <Stepper value={activeStep} onValueChange={setActiveStep}>
+//         {steps.map((step) => (
+//             <StepperItem className="not-last:flex-1" key={step} step={step}>
+//                 {step < steps.length && <StepperSeparator />}
+//                 <StepperTrigger>
+//                     <StepperIndicator className="" />
+//                     {
+//                         step < steps.length && <hr className='border-accent w-35 border' />
+//                     }
+//                 </StepperTrigger>
+//                 {step < steps.length && <StepperSeparator />}
+//             </StepperItem>
+//         ))}
+//     </Stepper>
+
+// </section>

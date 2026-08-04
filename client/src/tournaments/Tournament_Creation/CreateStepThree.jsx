@@ -20,7 +20,7 @@ function CreateStepThree({
                         <input type="text" placeholder='Enter a tournament rule' className={`${inputStyle+"grow"}`} />
                         <button className='bg-slate-100 text-black rounded-xl py-2 px-5 cursor-pointer' >Add Rule</button>
                     </div>
-                    <div className='rounded-3xl overflow-hidden border mt-5'>
+                    <div className='rounded-xl overflow-hidden border mt-5'>
                         <table className='border w-full  border-collapse table-fixed'>
                             <thead>
                                 <tr className='bg-accent'>

@@ -29,8 +29,8 @@ function CreateSidebar({
     return (
         <>
             <div className="grid gap-10 justify-center p-5 bg-card w-full">
-                <div className='flex flex-col gap-1 w-full text-center'>
-                    <img className=' w-full' src="https://res.cloudinary.com/dwaaoyztz/image/upload/q_auto/v1784428720/FIERZIO.gg_3_-Photoroom_npjprr.png" alt="" />
+                <div className='flex flex-col gap-1 w-full text-center'>                    
+                    <img className=' w-full' src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1785821014/Untitled_design_1_-Photoroom_ivd05t.png" alt="" />
                     <Link to={`/dashboard/tournaments/${user?.userID}`} className='mb-5 flex justify-center items-center gap-2 cursor-pointer'><ArrowLeftCircle />Back</Link>
                     <button onClick={()=>handleStepChange(1)} className={sidebarStyling(1)} > <span className={highlightStyle(1)}>1</span> Basic Details</button>                    
                     <button onClick={()=>handleStepChange(2)} className={sidebarStyling(2)} > <span className={highlightStyle(2)}>2</span> Tournament Settings</button>                    
