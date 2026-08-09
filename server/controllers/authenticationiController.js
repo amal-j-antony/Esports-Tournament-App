@@ -30,6 +30,9 @@ exports.jwtRefreshController = (req, res) => {
             userID, role
         },
             process.env.REFRESH_TOKEN_KEY,
+            {
+                expiresIn: "3d"
+            }
         )
         const newToken = jwt.sign({ userID, role }, process.env.JWT_KEY, { expiresIn: "15m" })
         res.cookie("refreshToken", newRefreshToken, {

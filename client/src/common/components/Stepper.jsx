@@ -1,48 +1,81 @@
 import React, { useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 
-function Stepper({steps}) {
+export function Stepper({ steps }) {
     const firstStep = steps[0]
     const lastStep = steps[steps.length - 1]
     const gridLength = steps.length
-    const [activeStep,setActiveStep] = useState(1)
-  return (
-    <>
-        <main className={`w-full grid grid-cols-5 gap-0 gap-y-5`}>
-            
-                {steps.map((item,index)=> (
-                    <div className='col-span-1 flex items-center' key={"fasdf"+index}>
-                        <div  className={
-                            item.stepNumber == activeStep ? "w-5 h-5 bg-slate-200 rounded-full flex items-center justify-center" : "w-5 h-5 border border-slate-200 rounded-full"
+    const [activeStep, setActiveStep] = useState(1)
+    return (
+        <>
+            <main className={`w-full grid grid-cols-5 gap-0 gap-y-5`}>
+
+                {steps.map((item, index) => (
+                    <div className='col-span-1 flex items-center' key={"fasdf" + index}>
+                        <div className={
+                            item.stepNumber == activeStep - 1 ? "w-5 h-5 bg-slate-200 rounded-full flex items-center justify-center" : "w-5 h-5 border border-slate-200 rounded-full"
                         }>
                             {
-                                item.stepNumber == activeStep && <FaCheck className='text-black'/>
+                                item.stepNumber == activeStep - 1 && <FaCheck className='text-black' />
                             }
-                            
+
                         </div>
                         {
                             item.stepNumber != lastStep.stepNumber && <hr className={
-                                item.stepNumber == activeStep ? "grow  bg-slate-200" : "grow  bg-[#4f4f4f]"
+                                item.stepNumber == activeStep - 1 ? "grow  bg-slate-200" : "grow  bg-[#4f4f4f]"
                             } />
                         }
                     </div>
                 ))}
-            
-            
+
+
                 {
-                    steps.map((item,index)=>(
-                        <div key={"poi"+index} className="flex flex-col col-span-1">
+                    steps.map((item, index) => (
+                        <div key={"poi" + index} className="flex flex-col col-span-1">
                             <h1>{item.title}</h1>
                             <h2>{item.description}</h2>
                             <h2>{item.time}</h2>
                         </div>
                     ))
                 }
-            
-        </main>
-    
-    </>
-  )
+
+            </main>
+
+        </>
+    )
 }
 
-export default Stepper
+export function StepperTournamentWizard({ steps,activeStep,setActiveStep }) {
+    const firstStep = steps[0]
+    const lastStep = steps[steps.length - 1]    
+    
+    return (
+        <>
+            <main className={`w-full flex gap-0 gap-y-5`}>
+
+                {steps.map((item, index) => (
+                    <div className='flex-1 flex items-center' key={"fasdf" + index}>
+                        <div onClick={()=>setActiveStep(item)} className={
+                            item == activeStep - 1 ? "w-10 h-10 bg-accent-foreground rounded-full flex items-center justify-center cursor-pointer" : "w-10 h-10 bg-accent-foreground rounded-full flex items-center justify-center cursor-pointer"
+                        }>
+                            {
+                                item < activeStep  ? <FaCheck className='' /> : <span className=''>{item}</span>
+                            }
+
+                        </div>
+                        {
+                            item != lastStep && <hr className={
+                                item < activeStep  ? "grow  bg-accent-foreground" : "grow  bg-white"
+                            } />
+                        }
+                    </div>
+                ))}
+
+
+               
+
+            </main>
+
+        </>
+    )
+}

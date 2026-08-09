@@ -1,6 +1,6 @@
-import axios from "axios";
+
 import { axiosConfig } from "./axiosConfig";
-import { serverURL } from "./serverURL";
+
 
 // register account
 export const registerAccountAPI = async (data) => {

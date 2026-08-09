@@ -4,18 +4,19 @@ import CreateStepOne from './CreateStepOne';
 import CreateSidebar from './CreateSidebar';
 import CreateStepTwo from './CreateStepTwo';
 import CreateStepThree from './CreateStepThree';
-import { useForm } from 'react-hook-form';
-import TournamentPreview from './TournamentPreview';
+import { FormProvider, useForm } from 'react-hook-form';
 import CreateStepFour from './CreateStepFour';
 import CreateStepFive from './CreateStepFive';
 import SideBar from '@/common/components/SideBar';
+import { StepperTournamentWizard } from '@/common/components/Stepper';
+
 
 function CreateTournament() {
     const gameMap = new Map()
     esportsTitles.forEach(item => gameMap.set(item.name, item))
     console.log(gameMap);
     const [activeStep, setActiveStep] = useState(1)
-    const steps = [1, 2, 3, 4, 5]
+    const steps = [1, 2, 3, 4, 5, 6]
     const gameNames = esportsTitles.map(item => item.name)
 
     const handleStepChange = (type) => {
@@ -34,21 +35,8 @@ function CreateTournament() {
                 setActiveStep(type)
             }
         }
-
-
     }
-
-
-
-    const {
-        register,
-        control,
-        handleSubmit,
-        watch,
-        getValues,
-        setValues,
-        setValue
-    } = useForm({
+    const methods = useForm({
         defaultValues: {
             name: "",
             game: "",
@@ -60,36 +48,31 @@ function CreateTournament() {
             minTeamSize: 4,
             format: "",
             hostMode: "",
-            groupStage: {
-                enabled: true,
+
+            stageInfo: [{
+                stageID: crypto.randomUUID(),
+                stageName: "",
+                groupCount: 1,
+                stageType: "",
                 stageFormat: "",
-                groupCount: 2,
                 roundsCount: 3,
-                matchcount: 0
-            },
-            mainStage: {
-                stageFormat: "",
-                groupCount: 2,
-                roundsCount: 3,
-                matchcount: 0
-            },
+                matchCount: 3,
+                seeding: "initial"
+            }],
+
             rules: [],
-            rewards: {
-                enabled: true
-            },
+            enableRewards: true,
+            rewards: [],
             registrationDate: "",
             checkIn: true,
-            requirements: "",
+            checkInMinutes: 0,
             startDate: "",
         }
     })
-
-    const output = watch()
+    const output = methods.watch()
     console.log(output);
-
-
     return (
-        <>
+        <FormProvider {...methods}>
 
             <div className='grid grid-cols-7 gap-1'>
                 <CreateSidebar
@@ -99,20 +82,20 @@ function CreateTournament() {
                     handleStepChange={handleStepChange}
                 />
 
-                <main className='col-span-5 w-full h-full min-h-screen flex flex-col items-center p-10 gap-5 bg-card' >
+                <main className='col-span-6 w-full h-full min-h-screen flex flex-col items-center p-10 gap-5 bg-card' >
+                    <section className='p-10 w-4/5'>
+                        <h1 className='pb-3 text-3xl w-full font-bold '>Create Tournament</h1>
+                        <p className='pb-3 text-xl'>Step {activeStep} of {steps[steps.length - 1]}</p>
+                        <StepperTournamentWizard steps={steps} activeStep={activeStep} setActiveStep={setActiveStep} />
+                    </section>
 
-
-                    <h1 className='text-3xl w-full font-bold'>Create Tournament</h1>
-                    <input type="text" className='w-full bg-[#1a1a1a] px-5 py-2 rounded-2xl border' placeholder='Search for an option' />
                     {/* step 1 */}
                     {
                         activeStep == 1 &&
                         <CreateStepOne
-                            setValue={setValue}
-                            control={control}
-                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
+                            handleStepChange={handleStepChange}
                         />
                     }
 
@@ -120,10 +103,9 @@ function CreateTournament() {
                         activeStep == 2 &&
                         <CreateStepTwo
                             gameNames={gameNames}
-                            control={control}
-                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
+                            handleStepChange={handleStepChange}
                         />
                     }
 
@@ -132,10 +114,9 @@ function CreateTournament() {
                         activeStep == 3 &&
                         <CreateStepThree
                             gameNames={gameNames}
-                            control={control}
-                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
+                            handleStepChange={handleStepChange}
                         />
                     }
 
@@ -143,10 +124,9 @@ function CreateTournament() {
                         //step 4
                         activeStep == 4 &&
                         <CreateStepFour
-                            control={control}
-                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
+                            handleStepChange={handleStepChange}
                         />
                     }
 
@@ -154,25 +134,21 @@ function CreateTournament() {
                         //step 5
                         activeStep == 5 &&
                         <CreateStepFive
-                            control={control}
-                            register={register}
                             activeStep={activeStep}
                             setActiveStep={setActiveStep}
+                            handleStepChange={handleStepChange}
                         />
                     }
 
-                    <div className="flex justify-center gap-5 my-5">
-                        <button onClick={() => handleStepChange("previous")} className='border border-accent p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                        <button onClick={() => handleStepChange("next")} className='border border-accent p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
-                    </div>
+
                 </main>
 
-                <section className='col-span-1 bg-card'>
+                {/* <section className='col-span-1 bg-card'>
                     <SideBar />
-                </section>
+                </section> */}
             </div>
 
-        </>
+        </FormProvider>
     )
 }
 
@@ -214,20 +190,49 @@ export default CreateTournament
 
 
 {/* stepper */ }
-// <section className='p-10'>
-//     <Stepper value={activeStep} onValueChange={setActiveStep}>
-//         {steps.map((step) => (
-//             <StepperItem className="not-last:flex-1" key={step} step={step}>
-//                 {step < steps.length && <StepperSeparator />}
-//                 <StepperTrigger>
-//                     <StepperIndicator className="" />
-//                     {
-//                         step < steps.length && <hr className='border-accent w-35 border' />
-//                     }
-//                 </StepperTrigger>
-//                 {step < steps.length && <StepperSeparator />}
-//             </StepperItem>
-//         ))}
-//     </Stepper>
+{/* <section className='p-10'>
+    <Stepper value={activeStep} onValueChange={setActiveStep}>
+        {steps.map((step) => (
+            <StepperItem className="not-last:flex-1" key={step} step={step}>
+                {step < steps.length && <StepperSeparator />}
+                <StepperTrigger>
+                    <StepperIndicator className="" />
+                    {
+                        step < steps.length && <hr className='border-accent w-35 border' />
+                    }
+                </StepperTrigger>
+                {step < steps.length && <StepperSeparator />}
+            </StepperItem>
+        ))}
+    </Stepper>
 
-// </section>
+</section> */}
+
+{/* <Stepper value={activeStep} onValueChange={setActiveStep}>
+                            {steps.map((step) => (
+                                <StepperItem className="flex-1" key={step} step={step}>                                    
+                                    <StepperTrigger>
+                                        <StepperIndicator className="bg-accent-foreground" />
+                                        {
+                                            step < steps.length && <hr className='grow' />
+                                        }
+                                    </StepperTrigger>
+                                    {step < steps.length && <StepperSeparator />}
+                                </StepperItem>
+                            ))}
+                        </Stepper> */}
+
+// groupStage: {
+//     enabled: true,
+//     stageFormat: "",
+//     groupCount: 2,
+//     roundsCount: 3,
+//     matchcount: 0
+// },
+
+// mainStage: {
+//     stageFormat: "",
+//     groupCount: 2,
+//     roundsCount: 3,
+//     matchcount: 0
+// },

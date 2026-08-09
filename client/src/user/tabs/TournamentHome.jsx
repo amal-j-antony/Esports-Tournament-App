@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/combobox"
 import { FaCalendar, FaGamepad, FaPlus, FaTrophy } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import { esportsTitles } from '@/data/gameList'
 
 function TournamentHome() {
+    const gameList = esportsTitles.map(item => item.name)
     const navigate = useNavigate()
     const status = ["open", "coming soon", "live"]
 
@@ -23,7 +25,7 @@ function TournamentHome() {
                 <div className="flex justify-center items-center relative gap-4 pt-10 pb-5">
                     <button onClick={()=>navigate('/createTournament')} className='py-3 px-5 cursor-pointer bg-accent rounded-3xl flex items-center gap-2 hover:bg-accent-foreground duration-500 text-sm'><FaPlus/> Create Tournament</button>
                     {/* <input type="text" placeholder='Search for a game' className='bg-accent text-center p-3 w-1/2 rounded-3xl' /> */}
-                    <Combobox items={status}>
+                    <Combobox items={gameList}>
                         <ComboboxInput className="h-11 w-1/2 text-center rounded-3xl" placeholder="Select Game" />
                         <ComboboxContent className="">
                             <ComboboxEmpty>No items found.</ComboboxEmpty>
@@ -39,7 +41,7 @@ function TournamentHome() {
 
                     {/* <button className="p-2 bg-[#3f3f3f] rounded-3xl"><SearchIcon /></button> */}
                     <Combobox items={status}>
-                        <ComboboxInput className="h-11 rounded-3xl" placeholder="Game Status" />
+                        <ComboboxInput className="h-11 rounded-3xl" placeholder="Tournament Status" />
                         <ComboboxContent className="">
                             <ComboboxEmpty>No items found.</ComboboxEmpty>
                             <ComboboxList>

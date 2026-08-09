@@ -4,7 +4,7 @@ import React from 'react'
 import { FaDotCircle } from 'react-icons/fa'
 import { FaArrowRight, FaBell, FaDiscord, FaFlag, FaGamepad, FaGlobe, FaPeopleGroup, FaTelegram, FaTrophy, FaWhatsapp, FaWifi, FaXTwitter } from 'react-icons/fa6'
 import TournamentDetailStepper from './TournamentDetailStepper'
-import Stepper from '@/common/components/Stepper'
+import {Stepper} from '@/common/components/Stepper'
 
 function TournamentDetails() {
   const steps = [{
