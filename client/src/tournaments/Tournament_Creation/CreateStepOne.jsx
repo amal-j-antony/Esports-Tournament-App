@@ -6,8 +6,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { SERIES_FORMAT } from '@/data/constants/seriesFormat';
 
 
-function CreateStepOne({handleStepChange}) {
-    const {register,control,setValue} = useFormContext()
+function CreateStepOne({ handleStepChange }) {
+    const { register, control, setValue } = useFormContext()
     const gameList = esportsTitles.map(item => item.name)
     const textAndIconStyle = 'flex items-center gap-2'
     const inputStyle = 'bg-accent px-10 py-3  rounded-xl '
@@ -45,9 +45,12 @@ function CreateStepOne({handleStepChange}) {
                 <hr className="col-span-2" />
                 <h1 className="col-span-2 text-xl font-bold">Media</h1>
                 <label htmlFor="">Tournament Image</label>
-                <input {...register("image")} className={inputStyle} type="file" />                                
-                <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                <button onClick={() => handleStepChange("next")} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
+                <input {...register("image")} className={inputStyle} type="file" />
+                <div className='col-span-2 grid grid-cols-3 gap-5'>
+                    <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
+                    <button className='bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
+                    <button onClick={() => handleStepChange("next")} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
+                </div>
             </form>
         </>
     )

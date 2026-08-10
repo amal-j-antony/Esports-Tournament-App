@@ -9,6 +9,7 @@ import CreateStepFour from './CreateStepFour';
 import CreateStepFive from './CreateStepFive';
 import SideBar from '@/common/components/SideBar';
 import { StepperTournamentWizard } from '@/common/components/Stepper';
+import CreateTournamentPreview from './CreateTournamentPreview';
 
 
 function CreateTournament() {
@@ -45,19 +46,19 @@ function CreateTournament() {
             banner: "",
             inviteOnly: false,
             maxTeamSize: 8,
-            minTeamSize: 4,
+            minTeamSize: null,
             format: "",
             hostMode: "",
 
             stageInfo: [{
                 stageID: crypto.randomUUID(),
-                stageName: "",
+                stageName: "Untitled stage 1",
                 groupCount: 1,
                 stageType: "",
                 stageFormat: "",
                 roundsCount: 3,
                 matchCount: 3,
-                seeding: "initial"
+                qualification: ""
             }],
 
             rules: [],
@@ -138,6 +139,11 @@ function CreateTournament() {
                             setActiveStep={setActiveStep}
                             handleStepChange={handleStepChange}
                         />
+                    }
+
+                    {
+                        activeStep == 6 &&
+                        <CreateTournamentPreview handleStepChange={handleStepChange} />
                     }
 
 

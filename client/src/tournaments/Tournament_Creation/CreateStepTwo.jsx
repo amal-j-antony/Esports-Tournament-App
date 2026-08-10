@@ -14,23 +14,24 @@ import { StageNameDialog } from '../TournamentComponents/StageEditDialogs'
 import { STAGE_TYPE } from '@/data/constants/stageTypes'
 import { StageSettingsHandler } from '@/common/components/Dropdown'
 import StageRender from '../TournamentComponents/StageRender'
+import { log2 } from 'three/src/nodes/math/MathNode.js'
 
 
 function CreateStepTwo({
     gameNames,
     handleStepChange
 }) {
-    const {register,control,setValue} = useFormContext()
+    const { register, control, setValue } = useFormContext()
     const [stageIndex, setStageIndex] = useState(0)
     console.log(stageIndex);
-    
+
     const [stageCount, setStageCount] = useState(0)
     const [stageNameDialog, setStageNameDialog] = useState(false)
     const textAndIconStyle = 'flex items-center gap-2'
     const inputStyle = 'bg-accent px-10 py-3  rounded-xl '
-    const [gameFormat, groupStageSettings, mainStageSettings, stageInfo] = useWatch({
+    const [gameFormat, stageInfo, maxTeams, minTeams] = useWatch({
         control,
-        name: ["format", "groupStage", "mainStage", "stageInfo"]
+        name: ["format", "stageInfo", "maxTeamSize", "minTeamSize"]
     })
 
     const { append, remove, update, field } = useFieldArray({
@@ -38,10 +39,10 @@ function CreateStepTwo({
         name: "stageInfo"
     })
 
-    const addStage = (index) => {
+    const addStage = () => {
         append({
             stageID: crypto.randomUUID(),
-            stageName: "",
+            stageName: `Untitled stage ${stageInfo.length}`,
             groupCount: 1,
             stageType: "",
             stageFormat: "",
@@ -53,11 +54,18 @@ function CreateStepTwo({
 
     const elimTeamSizes = (value) => {
         const teamArray = []
-        for (let i = 2; i <= value; i++) {        
+        for (let i = 2; i <= value; i++) {
             let slots = 2 ** i
             teamArray.push(slots)
         }
         return teamArray
+    }
+
+    const calcMinTeamSize = () => {
+        const exponent = log2(maxTeams)
+        const minTeamSize = (2 ** (exponent - 1) + 1)
+        console.log(minTeamSize);
+        setValue("minTeamSize", minTeamSize)
     }
 
     const teamInputType = () => {
@@ -73,9 +81,9 @@ function CreateStepTwo({
     }
 
     const handleStageChange = (index) => {
-    
+
         if (stageIndex != index) {
-            setStageIndex(index)                
+            setStageIndex(index)
         }
     }
 
@@ -97,37 +105,6 @@ function CreateStepTwo({
                     <option value="offline">Offline</option>
                 </select>
                 <hr className="col-span-2" />
-                <h1 className="col-span-2 text-2xl font-bold">Tournament Stage setup</h1>
-                <>
-                    <div className='grid grid-cols-2 w-full col-span-2 gap-5 border rounded-2xl p-5 bg-[#1a1a1a]'>
-                        <div className="flex gap-2 col-span-2 p-2 border rounded-xl">
-                            {stageInfo.map((item, index) => (
-                                <div onClick={() => handleStageChange(index)} className="bg-zinc-100 text-zinc-900 p-2 rounded cursor-pointer">
-                                    {item.stageName
-                                        ? <div  className='flex items-center gap-2'>{item.stageName} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>
-                                        : <div className='flex items-center gap-2'>Untitled Stage {index + 1} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>}
-                                </div>
-                            ))}
-                            <button onClick={addStage} className="flex items-center gap-2 bg-zinc-500 p-2 rounded cursor-pointer">Add stage <FaPlus /></button>
-                            {stageNameDialog.status &&
-                                <StageNameDialog
-                                    stageNameDialog={stageNameDialog}
-                                    setStageNameDialog={setStageNameDialog}
-                                    index={stageIndex}
-
-                                />}
-                        </div>
-                        <StageRender 
-                            index={stageIndex}
-                            stageDetails={stageInfo[stageIndex]}
-                            gameFormat={gameFormat} />
-
-                    </div>
-                </>
-
-
-
-                <hr className="col-span-2" />
                 <h1 className="col-span-2 text-xl font-bold">
                     Participants
                 </h1>
@@ -144,7 +121,7 @@ function CreateStepTwo({
                 <label htmlFor="">Maximum Number of Teams</label>
                 {
                     teamInputType === "variableSlotPreset"
-                        ? <input {...register("maxTeamSize")} type="number" placeholder='Enter total number of teams' className={inputStyle} />
+                        ? <input {...register("maxTeamSize")} value={maxTeams} type="number" placeholder='Enter total number of teams' className={inputStyle} />
                         :
                         <select name="" id="" className={inputStyle}>
                             {elimTeamSizes(7).map((item, index) => (
@@ -154,10 +131,40 @@ function CreateStepTwo({
                 }
 
                 <label htmlFor="">Minimum Number of Teams</label>
-                <input {...register("minTeamSize")} type="text" placeholder='Enter minimum number of Teams' className={inputStyle} />
-                <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                <button onClick={() => handleStepChange("next")} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
+                <input required {...register("minTeamSize")} defaultValue={minTeams} type="text" placeholder='Enter minimum number of Teams' className={inputStyle} />
+                <hr className="col-span-2" />
+                <h1 className="col-span-2 text-2xl font-bold">Tournament Stage setup</h1>
+                <>
+                    <div className='grid grid-cols-2 w-full col-span-2 gap-5 border rounded-2xl p-5 bg-[#1a1a1a]'>
+                        <div className="flex gap-2 col-span-2 p-2 border rounded-xl">
+                            {stageInfo.map((item, index) => (
+                                <div onClick={() => handleStageChange(index)} className="bg-accent-foreground p-2 rounded cursor-pointer">
+                                    {item.stageName
+                                        ? <div className='flex items-center gap-2'>{item.stageName} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>
+                                        : <div className='flex items-center gap-2'>Untitled Stage {index + 1} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>}
+                                </div>
+                            ))}
+                            <button onClick={addStage} className="flex items-center gap-2 bg-zinc-500 p-2 rounded cursor-pointer">Add stage <FaPlus /></button>
+                            {stageNameDialog &&
+                                <StageNameDialog
+                                    stageNameDialog={stageNameDialog}
+                                    setStageNameDialog={setStageNameDialog}
+                                    index={stageIndex}
 
+                                />}
+                        </div>
+                        <StageRender
+                            index={stageIndex}
+                            stageDetails={stageInfo[stageIndex]}
+                            gameFormat={gameFormat} />
+
+                    </div>
+                </>
+                <div className='col-span-2 grid grid-cols-3 gap-5'>
+                    <button onClick={() => handleStepChange("previous")} className='border border-zinc-600 rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
+                    <button className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
+                    <button onClick={() => handleStepChange("next")} className='font-bold bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
+                </div>
             </section>
         </>
     )

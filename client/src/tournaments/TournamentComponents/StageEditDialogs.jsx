@@ -13,10 +13,7 @@ export function StageNameDialog({
     const handleTitleSave = () => {
         if(newTitle){
             setValue(`stageInfo.${index}.stageName`,newTitle)
-            setStageNameDialog({
-                status: false,
-                index: null
-            })
+            setStageNameDialog(false)
         }else{
             toast("Field is empty")
         }
@@ -28,10 +25,7 @@ export function StageNameDialog({
                     <h1>Enter Stage Name</h1>
                     <input onChange={(e)=>setNewTitle(e.target.value)} type="text" className={inputStyle} />
                     <div className="flex justify-end gap-5">
-                        <button onClick={() => setStageNameDialog({
-                            status: false,
-                            index: null
-                        })} className="py-1 px-3 bg-accent rounded-xl cursor-pointer">Cancel</button>
+                        <button onClick={() => setStageNameDialog(false)} className="py-1 px-3 bg-accent rounded-xl cursor-pointer">Cancel</button>
                         <button onClick={handleTitleSave} className="py-1 px-3 bg-zinc-500 rounded-xl cursor-pointer">Proceed</button>
                     </div>
                 </section>

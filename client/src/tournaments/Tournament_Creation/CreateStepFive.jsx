@@ -35,14 +35,14 @@ function CreateStepFive({
             <input {...register("checkInMinutes")} className={inputStyle} type="number" />
           </>}
 
-        <label htmlFor=""> First Match Start Date and Time</label>
-        <input className={inputStyle} type="datetime-local" />
+        <label htmlFor=""> Tournament Start Date and Time</label>
+        <input {...register("startDate")} className={inputStyle} type="datetime-local" />        
 
-        <label htmlFor="">Matches Per Day</label>
-        <input className={inputStyle} type="number" />
-
-        <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-        <button onClick={() => handleStepChange("next")} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
+        <div className='col-span-2 grid grid-cols-3 gap-5'>
+          <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
+          <button className='bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
+          <button onClick={() => handleStepChange("next")} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
+        </div>
 
       </section>
     </main>

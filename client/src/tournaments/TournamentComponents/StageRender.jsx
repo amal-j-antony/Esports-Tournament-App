@@ -4,6 +4,7 @@ import { GAME_TYPES } from '@/data/constants/gameTypes'
 import { STAGE_TYPE } from '@/data/constants/stageTypes'
 import { GroupNumInfo, NumberOfMatchesInfo, NumRoundsInfo } from './TournamentTooltips'
 import { useFormContext, useWatch } from 'react-hook-form'
+import { QUALIFICATION_RULES } from '@/data/qualificationCriteria'
 
 function StageRender({
     gameFormat,
@@ -13,7 +14,7 @@ function StageRender({
     const stageDetails = useWatch({
         control,
         name: `stageInfo.${index}`
-    })    
+    })
     const inputStyle = 'bg-accent px-10 py-3  rounded-xl '
     const textAndIconStyle = 'flex items-center gap-2'
     return (
@@ -36,19 +37,30 @@ function StageRender({
                             <option value={GAME_TYPES.SWISS}>Swiss</option>
                         </select>
                         <label className={textAndIconStyle} >Number of rounds per match <NumRoundsInfo /> </label>
-                        <input {...register(`stageInfo.${index}.roundsCount`)} value={GroupStageInfo.roundsCount} type="number" placeholder='Enter number of rounds' className={inputStyle} />
+                        <input {...register(`stageInfo.${index}.roundsCount`)} value={stageDetails.roundsCount} type="number" placeholder='Enter number of rounds' className={inputStyle} />
                     </>
                     :
                     <>
-                        <select {...register(`stageInfo.${index}.stageFormat`)} value={stageDetails.stageFormat} className={inputStyle}>
+                        <select {...register(`stageInfo.${index}.stageFormat`)}  className={inputStyle}>
                             <option value={GAME_TYPES.POINTS}>League Points</option>
                             <option value={GAME_TYPES.ROUND_ROBIN}>Round Robin</option>
                             <option value={GAME_TYPES.SWISS}>Swiss</option>
                         </select>
                         <label htmlFor="" className={textAndIconStyle}>Number of matches <NumberOfMatchesInfo /></label>
-                        <input {...register(`stageInfo.${index}.roundsCount`)} value={stageDetails.roundsCount} type="text" placeholder='Enter number of Matches' className={inputStyle} />
+                        <input {...register(`stageInfo.${index}.roundsCount`)}  type="text" placeholder='Enter number of Matches' className={inputStyle} />
                     </>
             }
+            <label htmlFor="">Qulaification Criteria</label>
+            <select {...register(`stageInfo.${index}.qualification`)}  className={inputStyle} >
+                {
+                    QUALIFICATION_RULES.map((item, index) => (
+                        <option key={`qwertttt${index}`} value={item.description} >
+                            <h1>{item.description}</h1>
+                            
+                        </option>
+                    ))
+                }
+            </select>
         </>
     )
 }

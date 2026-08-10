@@ -37,6 +37,7 @@ function CreateSidebar({
                     <button onClick={()=>handleStepChange(3)} className={sidebarStyling(3)} > <span className={highlightStyle(3)}>3</span> Rules</button>                    
                     <button onClick={()=>handleStepChange(4)} className={sidebarStyling(4)} > <span className={highlightStyle(4)}>4</span> Prize Structure</button>
                     <button onClick={()=>handleStepChange(5)} className={sidebarStyling(5)} > <span className={highlightStyle(5)}>5</span> Schedule</button>
+                    <button onClick={()=>handleStepChange(6)} className={sidebarStyling(6)} > <span className={highlightStyle(6)}>5</span> Review</button>
                 </div>
             </div>
         </>
