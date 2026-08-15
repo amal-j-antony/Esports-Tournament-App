@@ -36,7 +36,6 @@ exports.loginController = async (req, res) => {
             const refreshToken = jwt.sign(
                 { role: existingUser.role, userID: existingUser._id },
                 process.env.REFRESH_TOKEN_KEY,
-                
             )
 
             const token = jwt.sign(
@@ -70,4 +69,69 @@ exports.loginController = async (req, res) => {
         res.status(400).json("Account does not exist, please register")
     }
 
+}
+
+exports.googleAuthenticationController = async (req,res) => {
+    const {email,username,avatar} = req.body
+    try {
+        const findUser = await accounts.findOne({email})
+        if(findUser){
+            const token = jwt.sign(
+                {role: findUser.role,
+                    userID: findUser._id
+                },
+                process.env.JWT_KEY,
+                {expiresIn: '30m'}
+            )
+
+            const refreshToken = jwt.sign(
+                {role: findUser.role,
+                    userID: findUser._id
+                },
+                process.env.REFRESH_TOKEN_KEY             
+            )
+
+            res.cookie("refreshToken",refreshToken,{
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
+                    maxAge : 7 * 24 * 60 * 60 * 1000
+                }
+                
+            )
+            const frontendPayload = {
+                username: findUser.username,
+                email : findUser.email,
+                role: findUser.role,
+                userID: findUser._id,
+                avatar: findUser.avatar
+            }
+            res.status(200).json({
+                account: frontendPayload,
+                token
+            })
+        }else{
+            const password = await bcrypt.hash(process.env.GOOGLE_PASSKEY,10)
+            const newUser = {
+                username,
+                password,
+                email,
+                avatar
+            }
+            const result = await accounts.create(newUser)
+            console.log({
+                origin: "googleAuthController/newUser",
+                data: result
+            });
+            
+            res.status(200).json(result)            
+        }
+    } catch (error) {
+        console.log({
+            origin: "googleAuthController/newUser",
+            error
+        });
+        
+        res.status(500).json('Server Error')
+    }
 }

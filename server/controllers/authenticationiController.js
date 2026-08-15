@@ -23,9 +23,15 @@ exports.authenticationController = async (req, res) => {
 }
 
 exports.jwtRefreshController = (req, res) => {
+    console.log('--refresh tokens--------');
+    
     const refeshToken = req.cookies.refreshToken
     if (refeshToken) {
         const { userID, role } = jwt.verify(refeshToken, process.env.REFRESH_TOKEN_KEY)
+        console.log({
+            userID,role
+        });
+        
         const newRefreshToken = jwt.sign({
             userID, role
         },

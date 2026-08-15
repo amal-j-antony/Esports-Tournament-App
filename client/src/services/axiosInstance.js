@@ -3,8 +3,6 @@ import { serverURL } from "./serverURL";
 import { useAuth } from "@/context/AuthProvider";
 import { getNewAccessTokenAPI } from "./accountMethods";
 
-
-
 export const axiosInstance = axios.create({
     baseURL: serverURL,
     timeout: 5000,
@@ -16,8 +14,6 @@ let logoutHandler = null
 export const registerLogoutHandler = (fn) => {
     logoutHandler = fn
 }
-
-
 
 
 axiosInstance.interceptors.response.use(
@@ -69,7 +65,7 @@ axiosInstance.interceptors.response.use(
             }
         }
         else if (error.request) {
-            console.log("Error: NO response from server");
+            console.log("Error: NO response from server",error);
 
         }
         else {

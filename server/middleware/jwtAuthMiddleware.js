@@ -13,7 +13,7 @@ const jwtAuthMiddleware = (req, res, next) => {
         });
 
         const userJWT = jwt.verify(accessToken, process.env.JWT_KEY)
-        console.log(userJWT);
+        console.log('jwt:', userJWT);
 
 
         if (userJWT) {

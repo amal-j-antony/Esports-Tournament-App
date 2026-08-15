@@ -1,5 +1,7 @@
-
+const http = require('http')
+const {Server} = require('socket.io')
 require("dotenv").config()
+const setupSocket = require('./services/socket')
 
 const express = require("express")
 
@@ -22,10 +24,26 @@ server.use(express.json())
 
 server.use(cookieParser())
 
+
+
 server.use(router)
+
+const socketServer = http.createServer(server)
+
+const io = new Server (socketServer, {
+    cors: {
+        origin: process.env.ORIGIN,
+        credentials: false
+    }
+})
+
+setupSocket(io)
+
+server.use(express.static('uploads'))
+
 
 const PORT = process.env.PORT
 
-server.listen(PORT, ()=> {
+socketServer.listen(PORT, ()=> {
     console.log(`Server started at ${PORT} `);
 })

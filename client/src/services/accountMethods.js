@@ -12,6 +12,11 @@ export const loginToAccountAPI = async (data) => {
     return await axiosConfig("POST",`/login`,data)
 }
 
+//google auth
+export const googleAuthenticationAPI = async (data) => {
+    return await axiosConfig("POST",'/google-authentication',data)
+}
+
 //identity
 export const getAuthenticationStatusAPI = async () => {
     return await axiosConfig("GET",'/identity',{})

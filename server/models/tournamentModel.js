@@ -7,6 +7,28 @@ const tournamentData = new mongoose.Schema({
     game: {
         type: String,
         required: true
+    },
+    description: {
+        type: String,
+        default: ""
+    },
+    image: {
+        type: String,
+        default: ""
+    },
+    banner: {
+        type: String,
+        default: ""
+    },
+    settings: {
+        inviteOnly: {
+            type: Boolean,
+            default: false
+        },
+        maxTeamCount: {
+            type: Number,
+            req
+        }
     }
 
 })
