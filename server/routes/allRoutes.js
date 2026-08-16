@@ -1,5 +1,5 @@
 const express = require("express")
-const { registerController, loginController, googleAuthenticationController } = require("../controllers/accountController")
+const { registerController, loginController, googleAuthenticationController, getAllAccountsController } = require("../controllers/accountController")
 const { testController } = require("../controllers/testController")
 const jwtAuthMiddleware = require("../middleware/jwtAuthMiddleware")
 const { authenticationController, jwtRefreshController, logoutController } = require("../controllers/authenticationiController")
@@ -26,6 +26,8 @@ router.get("/identity",jwtAuthMiddleware,authenticationController)
 router.get("/refresh",jwtRefreshController)
 
 router.get("/logout",logoutController)
+
+router.get('/users',jwtAuthMiddleware,getAllAccountsController)
 
 //organization
 router.post("/create-organization",jwtAuthMiddleware,multerMiddleware.single("oLogo"),createOrganizationController)

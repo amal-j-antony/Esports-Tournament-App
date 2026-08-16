@@ -2,16 +2,18 @@ import { recentSquads } from '@/data/dummySquad'
 import { dummyTournaments } from '@/data/dummyTournaments'
 import { Plus } from 'lucide-react'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 
 function UserSquads() {
+    const navigate = useNavigate()
     return (
         <>
             <main className="flex flex-col justify-center items-center py-5 px-15">
                 <section className="flex flex-col text-center my-10 bg-[#1d1d1d] w-full p-10 rounded-3xl">
                     <h1 className='text-2xl font-bold'>You are not currently in a squad</h1>
                     <div className="flex justify-center gap-5 mt-10">
-                        <button className='bg-accent p-5 rounded-2xl text-xl hover:bg-accent-foreground cursor-pointer' >Create Squad</button>
+                        <button onClick={()=>navigate('/createSquad')} className='bg-accent p-5 rounded-2xl text-xl hover:bg-accent-foreground cursor-pointer' >Create Squad</button>
                         <button className='bg-accent p-5 rounded-2xl text-xl hover:bg-accent-foreground cursor-pointer' >Join Squad</button>
                     </div>
                 </section>

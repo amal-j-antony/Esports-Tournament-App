@@ -31,3 +31,8 @@ export const getNewAccessTokenAPI = async () => {
 export const logoutAccoutAPI = async () => {
     return await axiosConfig("GET",'/logout',{})
 }
+
+// get all accounts
+export const getAllAccountsAPI = async () => {
+    return await axiosConfig('GET','/users',{})
+}

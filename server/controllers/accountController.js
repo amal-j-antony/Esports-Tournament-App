@@ -135,3 +135,17 @@ exports.googleAuthenticationController = async (req,res) => {
         res.status(500).json('Server Error')
     }
 }
+
+exports.getAllAccountsController = async (req,res) => {
+    try {
+        const result = await accounts.find({role: {$ne: "ADMIN"}})
+        res.status(200).json(result)
+    } catch (error) {
+        console.log({
+            origin: "getAllUsers",
+            error
+        });
+        
+        res.status(500).json('Server Error')
+    }
+}

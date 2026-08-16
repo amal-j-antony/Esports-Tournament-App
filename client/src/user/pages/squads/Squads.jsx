@@ -1,6 +1,7 @@
 import SideBar from '@/common/components/SideBar'
 import React from 'react'
-import UserSquads from '../tabs/UserSquads'
+import UserSquads from './tabs/UserSquads'
+
 
 
 

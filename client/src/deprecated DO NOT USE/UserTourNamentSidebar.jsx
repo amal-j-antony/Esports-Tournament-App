@@ -7,7 +7,7 @@ import { FaExclamation, FaTrophy, FaUser } from "react-icons/fa";
 import Header from '@/common/components/Header'
 import React, { useState } from 'react'
 import UserHome from "../user/tabs/UserHome";
-import UserSquads from "../user/tabs/UserSquads";
+import UserSquads from "../user/pages/squads/tabs/UserSquads";
 import { notifications } from "@/data/dummyNotiofications";
 import UserNotifications from "../user/tabs/UserNotifications";
 import UserHeader from "./UserHeader";

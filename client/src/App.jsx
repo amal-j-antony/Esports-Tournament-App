@@ -11,7 +11,7 @@ import TournamentDetails from './tournaments/Tournament_Details/TournamentDetail
 import CreateTournament from './tournaments/Tournament_Creation/CreateTournament';
 import Popular from './user/pages/Popular';
 import Tournaments from './user/pages/Tournaments';
-import Squads from './user/pages/Squads';
+import Squads from './user/pages/squads/Squads';
 import Notifications from './user/pages/Notifications';
 import Profile from './user/pages/Profile';
 import Messages from './user/pages/Messages';
@@ -29,6 +29,7 @@ import OrgCreatedTournaments from './organization/OrgCreatedTournaments';
 import OrganizationSettings from './organization/OrganizationSettings';
 import ViewOrganizations from './organization/allOrganizations/ViewOrganizations';
 import { HashLoader } from 'react-spinners'
+import CreateSquad from './user/pages/squads/CreateSquad';
 
 function App() {
   const { login, user } = useAuth()
@@ -121,6 +122,8 @@ function App() {
               <Route path='/create-organization' element={<OrganizationCreatorWizard />} />
               {/* join existing organizations */}
               <Route path='/view-organization' element={<ViewOrganizations />} />
+              {/* create Squad */}
+              <Route path='/createSquad' element={<CreateSquad/>} />
               {/* Page not found */}
               <Route path='/*' element={<PageNotFound />} />
             </Routes>
