@@ -17,52 +17,52 @@ const groupStageSchema = z.discriminatedUnion("enabled", [
 
 
 
-const tournamentSchema = z.discriminatedUnion("format",[
+export const tournamentSchema = z.discriminatedUnion("format", [
     z.object({
         format: z.literal(SERIES_FORMAT.HEAD_TO_HEAD),
         groupStage: groupStageSchema
     }),
 
+   
 
-z.object({
-    name: z.string().min(3, "Name too short"),
-    game: z.string().min(2, "Select game to proceed"),
-    maxTeamSize: z.number(),
-    minTeamSize: z.number(),
-    
-    
-    
-}).superRefine((data, ctx) => {
-    if (groupStage.enabled) {
-        if (data.groupStage.stageFormat == GAME_TYPES.SINGLE_ELIMINATION || data.groupStage.stageFormat == GAME_TYPES.DOUBLE_ELIMINATION) {
-            const numRounds = Math.log2(maxTeamSize)
-            const minTeamsRequired = 2 ** (numRounds - 1) + 1
-            if (minTeamSize < minTeamsRequired) {
-                ctx.addIssue({
-                    code: "custom",
-                    path: ["minTeamSize"],
-                    message: `minimum team size is ${minTeamsRequired} for a max team size of ${data.maxTeamSize} with selected game format`
-                })
+
+    z.object({
+        name: z.string().min(3, "Name too short"),
+        game: z.string().min(2, "Select game to proceed"),
+        maxTeamSize: z.number(),
+        minTeamSize: z.number(),
+
+
+
+    }).superRefine((data, ctx) => {
+        if (groupStage.enabled) {
+            if (data.groupStage.stageFormat == GAME_TYPES.SINGLE_ELIMINATION || data.groupStage.stageFormat == GAME_TYPES.DOUBLE_ELIMINATION) {
+                const numRounds = Math.log2(maxTeamSize)
+                const minTeamsRequired = 2 ** (numRounds - 1) + 1
+                if (minTeamSize < minTeamsRequired) {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["minTeamSize"],
+                        message: `minimum team size is ${minTeamsRequired} for a max team size of ${data.maxTeamSize} with selected game format`
+                    })
+                }
+            }
+        } else {
+            if (data.mainStage.stageFormat == GAME_TYPES.SINGLE_ELIMINATION || data.mainStage.stageFormat == GAME_TYPES.DOUBLE_ELIMINATION) {
+                const numRounds = Math.log2(maxTeamSize)
+                const minTeamsRequired = 2 ** (numRounds - 1) + 1
+                if (minTeamSize < minTeamsRequired) {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["minTeamSize"],
+                        message: `minimum team size is ${minTeamsRequired} for a max team size of ${data.maxTeamSize} with selected game format`
+                    })
+                }
             }
         }
-    } else {
-        if (data.mainStage.stageFormat == GAME_TYPES.SINGLE_ELIMINATION || data.mainStage.stageFormat == GAME_TYPES.DOUBLE_ELIMINATION) {
-            const numRounds = Math.log2(maxTeamSize)
-            const minTeamsRequired = 2 ** (numRounds - 1) + 1
-            if (minTeamSize < minTeamsRequired) {
-                ctx.addIssue({
-                    code: "custom",
-                    path: ["minTeamSize"],
-                    message: `minimum team size is ${minTeamsRequired} for a max team size of ${data.maxTeamSize} with selected game format`
-                })
-            }
-        }
-    }
-if(format == SERIES_FORMAT.LOBBY){
+       
+    })
     
-}
-
-})
 
 ])
 

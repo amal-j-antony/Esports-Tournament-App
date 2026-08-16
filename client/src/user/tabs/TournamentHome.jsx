@@ -1,5 +1,5 @@
 import { Calendar, Gamepad2, SearchIcon } from 'lucide-react'
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Combobox,
     ComboboxContent,
@@ -11,19 +11,36 @@ import {
 import { FaCalendar, FaGamepad, FaPlus, FaTrophy } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { esportsTitles } from '@/data/gameList'
+import { OrgContext } from '@/context/OrgProvider'
+import { OrganiationRoles } from '@/data/constants/roles'
+import { toast } from 'react-toastify'
+import { useAuth } from '@/context/AuthProvider'
 
 function TournamentHome() {
     const gameList = esportsTitles.map(item => item.name)
     const navigate = useNavigate()
     const status = ["open", "coming soon", "live"]
+    const {userOrgData} = useContext(OrgContext)
+    const {user} = useAuth()
+    const handleCreateTournament = () => {
+        if(!userOrgData){
+            toast('Please create or join an organization to host tournaments')
+            return
+        }
 
+        if(userOrgData.role == OrganiationRoles.LEADER || userOrgData.role == OrganiationRoles.CO_LEADER){
+            navigate(`/organization/${user.userID}/tournaments`)
+        }else{
+            toast('You do not have permission to create tournaments')
+        }
+    }
     return (
         <>
             <section className='col-span-5 h-full min-h-screen flex flex-col bg-card'>
                
                 {/* search bar */}
                 <div className="flex justify-center items-center relative gap-4 pt-10 pb-5">
-                    <button onClick={()=>navigate('/createTournament')} className='py-3 px-5 cursor-pointer bg-accent rounded-3xl flex items-center gap-2 hover:bg-accent-foreground duration-500 text-sm'><FaPlus/> Create Tournament</button>
+                    <button onClick={()=>handleCreateTournament()} className='py-3 px-5 cursor-pointer bg-accent rounded-3xl flex items-center gap-2 hover:bg-accent-foreground duration-500 text-sm'><FaPlus/> Create Tournament</button>
                     {/* <input type="text" placeholder='Search for a game' className='bg-accent text-center p-3 w-1/2 rounded-3xl' /> */}
                     <Combobox items={gameList}>
                         <ComboboxInput className="h-11 w-1/2 text-center rounded-3xl" placeholder="Select Game" />

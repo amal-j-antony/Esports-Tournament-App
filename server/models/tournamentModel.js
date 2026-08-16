@@ -1,5 +1,19 @@
 const mongoose = require('mongoose')
-const tournamentData = new mongoose.Schema({
+const tournamentSchema = new mongoose.Schema({
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'accounts',
+        required: true
+    },
+    orgID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'organizations',
+        required: true
+    },
+    status: {
+        type: String,
+        default: 'Draft'
+    },
     name: {
         type: String,
         required: true
@@ -27,8 +41,89 @@ const tournamentData = new mongoose.Schema({
         },
         maxTeamCount: {
             type: Number,
-            req
+            default: 8
+        },
+        minTeamCount: {
+            type: Number,
+            default: 4
+        },
+        gameFormat: {
+            type: String,
+            required: true
+        },
+        hostMode: {
+            type: String,
+            default: "Online"
+        },
+
+    },
+    rules: [
+        {
+            type: String,
+            default: []
         }
-    }
+
+    ],
+    enableRewards: {
+        type: Boolean,
+        default: false
+    },
+    rewards: [
+        {
+            position: {
+                type: String,
+                default: ""
+            },
+            reward: {
+                type: String,
+                default: ""
+            },
+            description: {
+                type: String,
+                default: ""
+            },
+        }
+    ],
+    stageInfo: [
+        {
+            stageName: {
+                type: String,
+                default: ""
+            },
+            groupCount: {
+                type: Number,
+                default: 1
+            },
+            stageType: {
+                type: String,
+                default: ""
+            },
+            stageFormat: {
+                type: String,
+                default: ""
+            },
+            roundsCount: {
+                type: Number,
+                default: 1
+            },
+            matchCount: {
+                type: Number,
+                default: 2
+            },
+            qualification: {
+                type: String,
+                default: ""
+            }
+        }
+    ],
+    socials: [
+        {
+            type: String,
+            default: []
+        }
+    ]
 
 })
+
+const tournament = mongoose.model('tournaments', tournamentSchema)
+module.exports = tournament

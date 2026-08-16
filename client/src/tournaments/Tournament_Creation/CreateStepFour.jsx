@@ -10,15 +10,20 @@ import { MdOutlineEdit } from 'react-icons/md'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 import EditRewardsDialog from '../TournamentComponents/EditRewardsDialog'
 import DeleteRewardDialog from '../TournamentComponents/DeleteRewardDialog'
+import { useParams } from 'react-router-dom'
+import { updateTournamentStageFourAPI } from '@/services/tournamentMethods'
+import { StepperPreload } from '@/common/components/Loader'
 
-function CreateStepFour({  
+function CreateStepFour({
   handleStepChange
 }) {
-  const {register,control,} = useFormContext()
+  const { TID } = useParams()
+  const [loading, setLoading] = useState(false)
+  const { register, control, getValues } = useFormContext()
   const [editOpen, setEditOpen] = useState(false)
-  const [deleteOpen,setDeleteOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   console.log(editOpen);
-  const [deleteIndex,setDeleteIndex] = useState(null)
+  const [deleteIndex, setDeleteIndex] = useState(null)
   const [editIndex, setEditIndex] = useState(null)
   const [fieldData, setFieldData] = useState({
     position: "",
@@ -40,7 +45,7 @@ function CreateStepFour({
   })
 
   const addReward = () => {
-    if(fieldData.position == "" || fieldData.reward == ''){
+    if (fieldData.position == "" || fieldData.reward == '') {
       toast("Please fill out position and reward details")
       return
     }
@@ -74,79 +79,128 @@ function CreateStepFour({
     }
   }
 
-  const deleteReward = (index) => {
+  const sendData = async (data) => {
+    const payload = {
+      rewards: data.rewards,
+      enableRewards: data.enableRewards,
+      tID: TID
+    }
+    try {
+      setLoading(true)
+      const result = await updateTournamentStageFourAPI(payload)
 
+      if (result.status == 200) {
+        toast('Data Updated')
+      } else {
+        toast('Something went wrong')
+      }
+    } catch (error) {
+      console.log(error);
+      toast('Something went wrong')
+    }
+    getTournamentData()
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000)
   }
+
+  const validateData = () => {
+    const data = getValues()
+    if (data?.rewards.length == 0 && data.enableRewards) {
+      toast('Please fill in rewards')
+    } else {
+      sendData(data)
+    }
+  }
+
+
 
   return (
     <>
       <main className='grid grid-cols-2 w-3/4 gap-5 bg-[#1d1d1d] p-10 rounded-2xl'>
-        <div className="col-span-2 w-full">
-          <h1 className='text-xl font-bold'>Prize Structure</h1>
-        </div>
-        <div className='flex items-center gap-2'>
-          <label htmlFor="">Podium Rewards</label>
-          <PodiumRewardsInfo />
-        </div>
-        <div className='flex gap-2 items-center'>
-          <Controller
-            name='enableRewards'
-            control={control}
-            render={({ field }) => (
-              <Switch checked={field.value} onCheckedChange={field.onChange} />
-            )}
-          />
-          {podiumSwitch ? <span>Enabled</span> : <span>Disabled</span>}
-        </div>
-        {podiumSwitch &&
+        {loading ?
+          <StepperPreload />
+          :
           <>
-            <div className="w-full grid grid-cols-10 gap-5  col-span-2 rounded-2xl">
-              <input required onChange={(e) => setFieldData({ ...fieldData, position: e.target.value })} value={fieldData.position} type="text" className={inputStyle + "col-span-3"} placeholder='Enter Position' />
-              <input required onChange={(e) => setFieldData({ ...fieldData, reward: e.target.value })} value={fieldData.reward} type="text" className={inputStyle + "col-span-3"} placeholder='Enter Reward' />
-              <input onChange={(e) => setFieldData({ ...fieldData, description: e.target.value })} value={fieldData.description} type="text" className={inputStyle + "col-span-3 "} placeholder='Enter reward description' />
-              <button onClick={() => addReward()} className="p-1 bg-[#9f9f9f] rounded-2xl cursor-pointer flex justify-center items-center gap-2 hover:bg-accent-foreground duration-500"><FaPlus className='text-xl font-bold' />Add</button>
+            <div className="col-span-2 w-full">
+              <h1 className='text-xl font-bold'>Prize Structure</h1>
             </div>
-            <h1 className='font-bold'>Reward List</h1>
-            {
-              rewardData.length > 0 ?
-                rewardData.map((item, index) => (
-                  <div key={"werpo" + index} className='grid grid-cols-[3fr_3fr_3fr_1fr] gap-5 col-span-2 w-full'>
-                    <p className={inputStyle}>{item.position}</p>
-                    <p className={inputStyle}>{item.reward}</p>
-                    <p className={inputStyle}>{item.description}</p>
-                    <div className="w-full grid grid-cols-2 gap-2">
-                      <button onClick={()=>{setEditOpen(true),setEditIndex(index)}} className='rounded-xl flex justify-center items-center bg-[#9f9f9f] hover:bg-accent-foreground duration-500 cursor-pointer'><MdOutlineEdit /></button>
-                      <button onClick={()=>{setDeleteOpen(true),setDeleteIndex(index)}} className='rounded-xl flex justify-center items-center bg-[#9f9f9f] hover:bg-accent-foreground duration-500 cursor-pointer'><FaTrash /></button>
-                    </div>
-                  </div>
-                ))
-                :
-                <div className='col-span-2'>No rewards added yet</div>
+            <div className='flex items-center gap-2'>
+              <label htmlFor="">Podium Rewards</label>
+              <PodiumRewardsInfo />
+            </div>
+            <div className='flex gap-2 items-center'>
+              <Controller
+                name='enableRewards'
+                control={control}
+                render={({ field }) => (
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                )}
+              />
+              {podiumSwitch ? <span>Enabled</span> : <span>Disabled</span>}
+            </div>
+            {podiumSwitch &&
+              <>
+                <div className="w-full grid grid-cols-10 gap-5  col-span-2 rounded-2xl">
+                  <input required onChange={(e) => setFieldData({ ...fieldData, position: e.target.value })} value={fieldData.position} type="text" className={inputStyle + "col-span-3"} placeholder='Enter Position' />
+                  <input required onChange={(e) => setFieldData({ ...fieldData, reward: e.target.value })} value={fieldData.reward} type="text" className={inputStyle + "col-span-3"} placeholder='Enter Reward' />
+                  <input onChange={(e) => setFieldData({ ...fieldData, description: e.target.value })} value={fieldData.description} type="text" className={inputStyle + "col-span-3 "} placeholder='Enter reward description' />
+                  <button onClick={() => addReward()} className="p-1 bg-[#9f9f9f] rounded-2xl cursor-pointer flex justify-center items-center gap-2 hover:bg-accent-foreground duration-500"><FaPlus className='text-xl font-bold' />Add</button>
+                </div>
+                <h1 className='font-bold'>Reward List</h1>
+                {
+                  rewardData.length > 0 ?
+                    rewardData.map((item, index) => (
+                      <div key={"werpo" + index} className='grid grid-cols-[3fr_3fr_3fr_1fr] gap-5 col-span-2 w-full'>
+                        <p className={inputStyle}>{item.position}</p>
+                        <p className={inputStyle}>{item.reward}</p>
+                        <p className={inputStyle}>{item.description}</p>
+                        <div className="w-full grid grid-cols-2 gap-2">
+                          <button onClick={() => { setEditOpen(true), setEditIndex(index) }} className='rounded-xl flex justify-center items-center bg-[#9f9f9f] hover:bg-accent-foreground duration-500 cursor-pointer'><MdOutlineEdit /></button>
+                          <button onClick={() => { setDeleteOpen(true), setDeleteIndex(index) }} className='rounded-xl flex justify-center items-center bg-[#9f9f9f] hover:bg-accent-foreground duration-500 cursor-pointer'><FaTrash /></button>
+                        </div>
+                      </div>
+                    ))
+                    :
+                    <div className='col-span-2'>No rewards added yet</div>
+                }
+              </>
             }
-          </>
-        }
 
-        <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-        <button onClick={() => handleStepChange("next")} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
+            <div className='col-span-2 grid grid-cols-3 gap-5'>
+              <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
+              <button type='button' onClick={() => validateData()} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
+              <button onClick={() => {
+                const { enableRewards } = getValues()
+                setLoading(true)
+                enableRewards && validateData()
+                setTimeout(()=>{
+                  setLoading(false)
+                  handleStepChange("next")
+                },1000)
+                
+              }} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
+            </div>
+          </>}
       </main>
 
       {/* edit */}
-      {editOpen && <EditRewardsDialog 
+      {editOpen && <EditRewardsDialog
         rewardData={rewardData}
         setEditOpen={setEditOpen}
         editIndex={editIndex}
         setEditIndex={setEditIndex}
         update={update} />}
 
-        {/* delete */}
-        {
-          deleteOpen && <DeleteRewardDialog
+      {/* delete */}
+      {
+        deleteOpen && <DeleteRewardDialog
           deleteIndex={deleteIndex}
           setDeleteIndex={setDeleteIndex}
           remove={remove}
           setDeleteOpen={setDeleteOpen}
-          />
-        }
+        />
+      }
     </>
   )
 }

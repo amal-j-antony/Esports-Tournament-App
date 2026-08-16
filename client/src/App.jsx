@@ -41,8 +41,8 @@ function App() {
       const result = await getUserOrganizationAPI(userID)
       console.log("orgdetails-userID", userID);
 
-      if (result.data) {
-        loadOrgData(result.data)
+      if (result.status == 200) {
+        loadOrgData(result.data,userID)
       }
     } catch (error) {
       console.log(error);
@@ -83,6 +83,9 @@ function App() {
             <Routes>
               {/* Home */}
               <Route path='/' element={<Home />} />
+              {/* update Tournament */}
+              <Route path='/updateTournament/:TID' element={<CreateTournament/>} />
+              {/* create Tournament */}
               <Route path='/createTournament' element={<CreateTournament />} />
               {/* login */}
               <Route path='/login' element={<Login getOrgDetails={getOrgDetails} />} />

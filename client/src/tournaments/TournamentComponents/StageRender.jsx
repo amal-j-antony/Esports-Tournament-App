@@ -20,9 +20,9 @@ function StageRender({
     return (
         <>
             <label htmlFor="" className='flex items-center gap-2' >Number of Groups <GroupNumInfo /></label>
-            <input {...register(`stageInfo.${index}.groupCount`)} value={stageDetails.groupCount} type="number" placeholder='Enter number of groups' className={inputStyle} />
+            <input {...register(`stageInfo.${index}.groupCount`,{valueAsNumber:true})} type="number" placeholder='Enter number of groups' className={inputStyle} />
             <label htmlFor="">Game type</label>
-            <select {...register(`stageInfo.${index}.stageType`)} defaultValue={STAGE_TYPE.GROUP} value={stageDetails.stageType} className={inputStyle} >
+            <select {...register(`stageInfo.${index}.stageType`)} className={inputStyle} >
                 <option value={STAGE_TYPE.BRACKET}>Bracket</option>
                 <option value={STAGE_TYPE.GROUP}>Group</option>
             </select>
@@ -30,14 +30,14 @@ function StageRender({
             {
                 gameFormat == SERIES_FORMAT.HEAD_TO_HEAD ?
                     <>
-                        <select {...register(`stageInfo.${index}.stageFormat`)} value={stageDetails.stageFormat} className={inputStyle}>
+                        <select {...register(`stageInfo.${index}.stageFormat`)}  className={inputStyle}>
                             <option value={GAME_TYPES.SINGLE_ELIMINATION}>Single Elimination</option>
                             <option value={GAME_TYPES.DOUBLE_ELIMINATION}>Double Elimination</option>
                             <option value={GAME_TYPES.ROUND_ROBIN}>Round Robin</option>
                             <option value={GAME_TYPES.SWISS}>Swiss</option>
                         </select>
                         <label className={textAndIconStyle} >Number of rounds per match <NumRoundsInfo /> </label>
-                        <input {...register(`stageInfo.${index}.roundsCount`)} value={stageDetails.roundsCount} type="number" placeholder='Enter number of rounds' className={inputStyle} />
+                        <input {...register(`stageInfo.${index}.roundsCount`,{valueAsNumber:true})}  type="number" placeholder='Enter number of rounds' className={inputStyle} />
                     </>
                     :
                     <>
@@ -47,7 +47,7 @@ function StageRender({
                             <option value={GAME_TYPES.SWISS}>Swiss</option>
                         </select>
                         <label htmlFor="" className={textAndIconStyle}>Number of matches <NumberOfMatchesInfo /></label>
-                        <input {...register(`stageInfo.${index}.roundsCount`)}  type="text" placeholder='Enter number of Matches' className={inputStyle} />
+                        <input {...register(`stageInfo.${index}.matchCount`,{valueAsNumber:true})}  type="text" placeholder='Enter number of Matches' className={inputStyle} />
                     </>
             }
             <label htmlFor="">Qulaification Criteria</label>

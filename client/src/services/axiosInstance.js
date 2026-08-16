@@ -48,6 +48,10 @@ axiosInstance.interceptors.response.use(
                 // }
 
             }
+            else if(status === 401 && originalRequest.retry &&originalRequest.url!="/refresh" ){
+                logoutHandler?.()
+                return Promise.reject(error)
+            }
             else if (status === 400) {
                 console.log("400 Bad request", error);
             }

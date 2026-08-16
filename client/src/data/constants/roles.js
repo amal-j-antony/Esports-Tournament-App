@@ -1,18 +1,18 @@
 export const Roles = {
-    USER: "USER",
-    ADMIN: "ADMIN",
-    OWNER: "OWNER",
-    PLAYER: "PLAYER",
-    MODERATOR: "MODERATOR",
-    ORGANIZER: "ORGANIZER"
+    USER: "User",
+    ADMIN: "Admin",
+    OWNER: "Owner",
+    PLAYER: "Player",
+    MODERATOR: "Moderator",
+    ORGANIZER: "Organizaer"
 }
 
-export const ClanRoles = {
-    LEADER: "LEADER",
-    CO_LEADER: "CO_LEADER",
-    MEMBER: "MEMBER"
+export const OrganiationRoles = {
+    LEADER: "Leader",
+    CO_LEADER: "Co Leader",
+    MEMBER: "Member"
 }
 
 export const SquadRoles = {
-    Leader: "LEADER"
+    Leader: "Leader"
 }

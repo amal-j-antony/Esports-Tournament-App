@@ -8,15 +8,21 @@ import { toast } from 'react-toastify'
 import { add } from 'three/src/nodes/math/OperatorNode.js'
 import EditRuleDialog from '../TournamentComponents/EditRuleDialog'
 import DeleteRuleDialog from '../TournamentComponents/DeleteRuleDialog'
+import { useParams } from 'react-router-dom'
+import { updateTournamentStepThreeAPI } from '@/services/tournamentMethods'
+import { StepperPreload } from '@/common/components/Loader'
 
 
 function CreateStepThree({
-    gameNames,    
-    handleStepChange
+    gameNames,
+    handleStepChange,
+    getTournamentData
 }) {
-    const {control,getValues} = useFormContext()
+    const { TID } = useParams()
+    const { control, getValues } = useFormContext()
     const [ruleEditButton, setRuleEditButton] = useState(false)
     const [ruleRemoveButton, setRuleRemoveButton] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [ruleInput, setRuleInput] = useState("")
     const { fields, append, remove, update } = useFieldArray({
         control,
@@ -60,54 +66,101 @@ function CreateStepThree({
         toast.success("Rule updated successfully")
         setRuleEditButton(false)
     }
+
+    const sendData = async (data) => {
+        const payload = {
+            rules: data.rules,
+            tID: TID
+        }
+        setLoading(true)
+        try {
+            const result = await updateTournamentStepThreeAPI(payload)
+            console.log(result);
+            if (result.status == 200) {
+                toast('Data updated')
+            }else{
+                toast('Something went wrong')
+            }
+        } catch (error) {
+            console.log(error);
+            toast('Something went wrong')
+        }
+        getTournamentData()
+        setTimeout(() => {
+            setLoading(false)
+        }, 2000)
+    }
+
+    const validateData = () => {
+        const data = getValues()
+        if (data.rules.length == 0) {
+            toast('No rules entered')
+            return
+        } else {
+            sendData(data)
+        }
+    }
     return (
         <>
             <main className='flex justify-center gap-5 w-3/4 bg-[#1d1d1d] p-10 rounded-2xl' >
+                {
+                    loading ?
+                        <StepperPreload />
+                        :
+                        <section className='w-full'>
+                            <h1 className='mb-5 text-2xl font-bold'>Tournament Rules</h1>
+                            <div className='mb-5 flex gap-2 col-span-2 w-full'>
+                                <input onChange={(e) => setRuleInput(e.target.value)} value={ruleInput} type="text" placeholder='Enter a tournament rule' className="bg-accent py-4 px-10  rounded-xl w-100 grow" />
+                                <button onClick={() => addRuleHandler()} className='bg-zinc-600 hover:bg-accent-foreground duration-500 rounded-xl py-1 px-5 cursor-pointer' ><FaPlus /></button>
+                                <button onClick={() => setRuleInput("")} className='bg-zinc-600 hover:bg-accent-foreground duration-500 rounded-xl py-1 px-5 cursor-pointer' ><Trash /></button>
+                            </div>
 
-                <section className='w-full'>
-                    <h1 className='mb-5 text-2xl font-bold'>Tournament Rules</h1>
-                    <div className='mb-5 flex gap-2 col-span-2 w-full'>
-                        <input onChange={(e) => setRuleInput(e.target.value)} value={ruleInput} type="text" placeholder='Enter a tournament rule' className="bg-accent py-4 px-10  rounded-xl w-100 grow" />
-                        <button onClick={() => addRuleHandler()} className='bg-zinc-600 hover:bg-accent-foreground duration-500 rounded-xl py-1 px-5 cursor-pointer' ><FaPlus /></button>
-                        <button onClick={() => setRuleInput("")} className='bg-zinc-600 hover:bg-accent-foreground duration-500 rounded-xl py-1 px-5 cursor-pointer' ><Trash /></button>
-                    </div>
-                    
-                    <div className='overflow-hidden mt-5'>
-                        {ruleData.length > 0 ?
-                            ruleData.map((item, index) => (
-                                <>
-                                    <section className="flex justify-between items-center px-10 w-full  mb-4 rounded-xl bg-accent">
-                                        <div className="border py-2 px-3 rounded-lg bg-zinc-600">{index + 1}</div>
-                                        <div>{item}</div>
-                                        <div className='p-3 text-center flex gap-4 items-center justify-center'>
-                                            <button onClick={() => setRuleEditButton(true)} className="border p-3 rounded-lg  border-zinc-500 bg-zinc-600 text-md duration-500 hover:bg-zinc-50 hover:text-black cursor-pointer"><MdEdit /> </button>
-                                            <button onClick={() => setRuleRemoveButton(true)} className="border p-3 rounded-lg  border-zinc-500 bg-zinc-600 text-md duration-500 hover:bg-zinc-50 hover:text-black cursor-pointer"><MdDelete /></button>
-                                        </div>
-                                    </section>
-                                    <EditRuleDialog
-                                        ruleEditButton={ruleEditButton}
-                                        setRuleEditButton={setRuleEditButton}
-                                        index={index}
-                                        ruleUpdateHandler={ruleUpdateHandler} />
-                                    <DeleteRuleDialog 
-                                        ruleRemoveButton={ruleRemoveButton}
-                                        setRuleRemoveButton={setRuleRemoveButton}
-                                        index={index}
-                                        remove={remove}
-                                    />
-                                </>
-                            ))
-                            :
-                            <>
-                                <div className="flex justify-center items-center text p-3 rounded-xl border mb-5 h-30">No rules added yet.</div>
-                            </>}
-                    </div>
-                    <p className='p-3 flex items-center justify-center gap-2 rounded-xl border bg-[#1d1d1d]'><FaInfoCircle className='h-5 w-5' />  Tournament organizers are responsible for enforcing the rules they set for tournaments.</p>
-                    <div className='grid grid-cols-2 gap-2 py-5'>
-                        <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                        <button onClick={() => handleStepChange("next")} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
-                    </div>
-                </section>
+                            <div className='overflow-hidden mt-5'>
+                                {ruleData.length > 0 ?
+                                    ruleData.map((item, index) => (
+                                        <>
+                                            <section className="flex justify-between items-center px-10 w-full  mb-4 rounded-xl bg-accent">
+                                                <div className="border py-2 px-3 rounded-lg bg-zinc-600">{index + 1}</div>
+                                                <div>{item}</div>
+                                                <div className='p-3 text-center flex gap-4 items-center justify-center'>
+                                                    <button onClick={() => setRuleEditButton(true)} className="border p-3 rounded-lg  border-zinc-500 bg-zinc-600 text-md duration-500 hover:bg-zinc-50 hover:text-black cursor-pointer"><MdEdit /> </button>
+                                                    <button onClick={() => setRuleRemoveButton(true)} className="border p-3 rounded-lg  border-zinc-500 bg-zinc-600 text-md duration-500 hover:bg-zinc-50 hover:text-black cursor-pointer"><MdDelete /></button>
+                                                </div>
+                                            </section>
+                                            <EditRuleDialog
+                                                ruleEditButton={ruleEditButton}
+                                                setRuleEditButton={setRuleEditButton}
+                                                index={index}
+                                                ruleUpdateHandler={ruleUpdateHandler} />
+                                            <DeleteRuleDialog
+                                                ruleRemoveButton={ruleRemoveButton}
+                                                setRuleRemoveButton={setRuleRemoveButton}
+                                                index={index}
+                                                remove={remove}
+                                            />
+                                        </>
+                                    ))
+                                    :
+                                    <>
+                                        <div className="flex justify-center items-center text p-3 rounded-xl border mb-5 h-30">No rules added yet.</div>
+                                    </>}
+                            </div>
+                            <p className='p-3 flex items-center justify-center gap-2 rounded-xl border bg-[#1d1d1d]'><FaInfoCircle className='h-5 w-5' />  Tournament organizers are responsible for enforcing the rules they set for tournaments.</p>
+                            <div className='grid grid-cols-3 gap-5 py-5'>
+                                <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
+                                <button type='button' onClick={() => validateData()} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
+                                <button onClick={() => {
+                                    validateData()
+                                    setLoading(true)
+                                    setTimeout(()=>{
+                                        setLoading(false)
+                                        handleStepChange("next")
+                                    },2000)
+                                    }} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
+                            </div>
+                        </section>
+                }
+
             </main>
 
         </>

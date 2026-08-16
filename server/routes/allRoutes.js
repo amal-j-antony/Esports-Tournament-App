@@ -3,10 +3,15 @@ const { registerController, loginController, googleAuthenticationController } = 
 const { testController } = require("../controllers/testController")
 const jwtAuthMiddleware = require("../middleware/jwtAuthMiddleware")
 const { authenticationController, jwtRefreshController, logoutController } = require("../controllers/authenticationiController")
-const { createOrganizationController, getOrganizationByIDController, getAllOrganizationsController, reqJoinOrganizationController, cancelJoinOrganizationController } = require("../controllers/organizationController")
+const { createOrganizationController, getOrganizationByIDController, getAllOrganizationsController, reqJoinOrganizationController, cancelJoinOrganizationController, getOrganizationTournamentsController } = require("../controllers/organizationController")
 const multerMiddleware = require("../middleware/multerMiddleware")
+const { createTournamentController, getTournamentByIdController, updateTournamentStepOneController, updateTournamentStepTwoController, updateTournamentStepThreeController, updateTournamentStageFourController } = require("../controllers/tournamentController")
 
 const router = new express.Router()
+
+router.get("/",(req,res)=>{
+    res.status(200).send("Server is up and running")
+})
 
 router.post("/register",registerController)
 
@@ -28,5 +33,14 @@ router.get('/getOrganizations',jwtAuthMiddleware,getAllOrganizationsController)
 router.get('/getOrganization/:userID',jwtAuthMiddleware,getOrganizationByIDController)
 router.post('/reqJoinOrganization',jwtAuthMiddleware,reqJoinOrganizationController)
 router.put('/cancelJoinOrganization',jwtAuthMiddleware,cancelJoinOrganizationController)
+router.get('/getOrgTournaments/:orgID',jwtAuthMiddleware,getOrganizationTournamentsController)
+
+//tournament
+router.post('/createTournament',jwtAuthMiddleware,multerMiddleware.single('image'),createTournamentController)
+router.get('/tournament/:tID',jwtAuthMiddleware,getTournamentByIdController)
+router.put('/updateTournamentStepOne',jwtAuthMiddleware,multerMiddleware.single('image'),updateTournamentStepOneController)
+router.put('/updateTournamentStepTwo',jwtAuthMiddleware,updateTournamentStepTwoController)
+router.put('/updateTournamentStepThree',jwtAuthMiddleware,updateTournamentStepThreeController)
+router.put('/updateTournamentStepFour',jwtAuthMiddleware,updateTournamentStageFourController)
 
 module.exports = router

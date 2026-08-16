@@ -5,7 +5,7 @@ import { getUserOrganizationAPI } from '@/services/organizationMethods'
 import React, { useContext } from 'react'
 
 function OrganizationHome() {
-  const { orgData, loadOrgData } = useContext(OrgContext)
+  const { orgData, loadOrgData, userOrgData } = useContext(OrgContext)
   const { user } = useAuth()
 
   return (

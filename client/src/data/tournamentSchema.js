@@ -5,12 +5,11 @@ import { SERIES_FORMAT } from "./constants/seriesFormat";
 
 const baseSchema = z.object({
 
-    hostMode: z.string().min(1, "Host mode required"),
     name: z.string().min(2, "Tournament Name must be longer than 2 charachters"),
     game: z.string().nonempty("Game selection required"),
     maxTeamSize: z.number().min(8, "Max team size cannot be lower than 4"),
     minTeamSize: z.number().min(4, "Minimum team count cannot be lower than 4"),
-    
+   
 })
 
 const stageSchema = z.object({

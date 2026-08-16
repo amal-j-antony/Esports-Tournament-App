@@ -15,16 +15,23 @@ import { STAGE_TYPE } from '@/data/constants/stageTypes'
 import { StageSettingsHandler } from '@/common/components/Dropdown'
 import StageRender from '../TournamentComponents/StageRender'
 import { log2 } from 'three/src/nodes/math/MathNode.js'
+import { useParams } from 'react-router-dom'
+import { StepperPreload } from '@/common/components/Loader'
+import { toast } from 'react-toastify'
+import { updateTournamentStepTwoAPI } from '@/services/tournamentMethods'
 
 
 function CreateStepTwo({
     gameNames,
-    handleStepChange
+    handleStepChange,
+    getTournamentData
 }) {
-    const { register, control, setValue } = useFormContext()
+    const [loading, setLoading] = useState(false)
+    const { TID } = useParams()
+    const { register, control, setValue ,trigger, getValues, formState } = useFormContext()
     const [stageIndex, setStageIndex] = useState(0)
     console.log(stageIndex);
-
+    
     const [stageCount, setStageCount] = useState(0)
     const [stageNameDialog, setStageNameDialog] = useState(false)
     const textAndIconStyle = 'flex items-center gap-2'
@@ -68,17 +75,17 @@ function CreateStepTwo({
         setValue("minTeamSize", minTeamSize)
     }
 
-    const teamInputType = () => {
-        if (groupStageSettings.enabled) {
-            if (groupStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && groupStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
-                return "varibaleSlotPreset"
-            } else return "fixedSlotPreset"
-        } else {
-            if (mainStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && mainStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
-                return "varibaleSlotPreset"
-            } else return "fixedSlotPreset"
-        }
-    }
+    // const teamInputType = () => {
+    //     if (groupStageSettings.enabled) {
+    //         if (groupStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && groupStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
+    //             return "varibaleSlotPreset"
+    //         } else return "fixedSlotPreset"
+    //     } else {
+    //         if (mainStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && mainStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
+    //             return "varibaleSlotPreset"
+    //         } else return "fixedSlotPreset"
+    //     }
+    // }
 
     const handleStageChange = (index) => {
 
@@ -87,6 +94,58 @@ function CreateStepTwo({
         }
     }
 
+    const sendData = async (payload) => {
+        console.log('ready for send');
+        
+        setLoading(true)
+        try {
+            const result = await updateTournamentStepTwoAPI(payload)
+            console.log(result);
+            
+            if(result.status == 200){
+                toast('Data updated')
+            }else{
+                toast('Something went wrong')
+            }
+        } catch (error) {
+            console.log(error)
+            toast('Something went wrong, please try again')
+            
+        }
+        getTournamentData()
+        setTimeout(()=>{
+            setLoading(false)
+        },2000)
+    }
+
+    const preparePayload = () => {
+        const data = getValues()
+        const payload = {
+            hostMode: data.hostMode,            
+            settings: {
+                inviteOnly: data.inviteOnly,
+                maxTeamCount: data.maxTeamSize,
+                minTeamCount: data.minTeamSize,
+            },
+            stageInfo: data.stageInfo,
+            tID: TID
+        }
+        console.log(payload);
+        
+        sendData(payload)
+    }
+
+    const validateData = async () => {
+        const valid = await trigger(['hostMode','minTeamSize','maxTeamSize','stageInfo'])
+        console.log('valid:',formState.errors);
+        
+        if(valid){
+            preparePayload()
+        }else{
+            toast('One or more fields have errors')
+            return
+        }
+    }
 
     useEffect(() => {
         console.log("gameFormat", gameFormat);
@@ -96,75 +155,88 @@ function CreateStepTwo({
     return (
         <>
             <section className="grid grid-cols-2 gap-5 border rounded-2xl p-10 w-3/4 bg-[#1d1d1d]">
-                <h1 className='mb-5 text-2xl font-bold col-span-2'>Tournament Settings</h1>
-                <h1>Tournament format</h1>
-                <span className={inputStyle}>{gameFormat ? gameFormat === SERIES_FORMAT.HEAD_TO_HEAD ? "Head To Head" : "Lobby" : "Select game to set tournament format"}</span>
-                <label htmlFor="">Tournament Hosting mode</label>
-                <select name="" id="" className={inputStyle}>
-                    <option value="online">Online</option>
-                    <option value="offline">Offline</option>
-                </select>
-                <hr className="col-span-2" />
-                <h1 className="col-span-2 text-xl font-bold">
-                    Participants
-                </h1>
-                <label htmlFor="" className='flex items-center gap-2'>Invite Only <InviteOnly /> </label>
-                <Controller
-                    name='inviteOnly'
-                    control={control}
-                    render={({ field }) => (
-                        <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange} />
-                    )}
-                />
-                <label htmlFor="">Maximum Number of Teams</label>
-                {
-                    teamInputType === "variableSlotPreset"
-                        ? <input {...register("maxTeamSize")} value={maxTeams} type="number" placeholder='Enter total number of teams' className={inputStyle} />
-                        :
-                        <select name="" id="" className={inputStyle}>
-                            {elimTeamSizes(7).map((item, index) => (
-                                <option key={"awesd" + index} value={item}>{item}</option>
-                            ))}
+                {loading ?
+                    <StepperPreload />
+                    :
+                    <>
+                        <h1 className='mb-5 text-2xl font-bold col-span-2'>Tournament Settings</h1>
+                        <h1>Tournament format</h1>
+                        <span className={inputStyle}>{gameFormat ? gameFormat === SERIES_FORMAT.HEAD_TO_HEAD ? "Head To Head" : "Lobby" : "Select game to set tournament format"}</span>
+                        <label htmlFor="">Tournament Hosting mode</label>
+                        <select {...register('hostMode')}  className={inputStyle}>
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
                         </select>
-                }
+                        <hr className="col-span-2" />
+                        <h1 className="col-span-2 text-xl font-bold">
+                            Participants
+                        </h1>
+                        <label htmlFor="" className='flex items-center gap-2'>Invite Only <InviteOnly /> </label>
+                        <Controller
+                            name='inviteOnly'
+                            control={control}
+                            render={({ field }) => (
+                                <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange} />
+                            )}
+                        />
+                        <label htmlFor="">Maximum Number of Teams</label>
+                        {/* {
+                            teamInputType() === "variableSlotPreset"
+                                ? <input {...register("maxTeamSize",{valueAsNumber:true})} value={maxTeams} type="number" placeholder='Enter total number of teams' className={inputStyle} />
+                                :
+                                <select {...register("maxTeamSize",{valueAsNumber:true})}  className={inputStyle}>
+                                    {elimTeamSizes(7).map((item, index) => (
+                                        <option key={"awesd" + index} value={item}>{item}</option>
+                                    ))}
+                                </select>
+                        } */}
+                        <input {...register("maxTeamSize",{valueAsNumber:true})} value={maxTeams} type="number" placeholder='Enter total number of teams' className={inputStyle} />
+                                
 
-                <label htmlFor="">Minimum Number of Teams</label>
-                <input required {...register("minTeamSize")} defaultValue={minTeams} type="text" placeholder='Enter minimum number of Teams' className={inputStyle} />
-                <hr className="col-span-2" />
-                <h1 className="col-span-2 text-2xl font-bold">Tournament Stage setup</h1>
-                <>
-                    <div className='grid grid-cols-2 w-full col-span-2 gap-5 border rounded-2xl p-5 bg-[#1a1a1a]'>
-                        <div className="flex gap-2 col-span-2 p-2 border rounded-xl">
-                            {stageInfo.map((item, index) => (
-                                <div onClick={() => handleStageChange(index)} className="bg-accent-foreground p-2 rounded cursor-pointer">
-                                    {item.stageName
-                                        ? <div className='flex items-center gap-2'>{item.stageName} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>
-                                        : <div className='flex items-center gap-2'>Untitled Stage {index + 1} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>}
+                        <label htmlFor="">Minimum Number of Teams</label>
+                        <input required {...register("minTeamSize",{valueAsNumber:true})} defaultValue={minTeams} type="text" placeholder='Enter minimum number of Teams' className={inputStyle} />
+                        <hr className="col-span-2" />
+                        <h1 className="col-span-2 text-2xl font-bold">Tournament Stage setup</h1>
+                        <>
+                            <div className='grid grid-cols-2 w-full col-span-2 gap-5 border rounded-2xl p-5 bg-[#1a1a1a]'>
+                                <div className="flex gap-2 col-span-2 p-2 border rounded-xl">
+                                    {stageInfo.map((item, index) => (
+                                        <div onClick={() => handleStageChange(index)} className="bg-accent-foreground p-2 rounded cursor-pointer">
+                                            {item.stageName
+                                                ? <div className='flex items-center gap-2'>{item.stageName} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>
+                                                : <div className='flex items-center gap-2'>Untitled Stage {index + 1} <StageSettingsHandler stageNameDialog={stageNameDialog} setStageNameDialog={setStageNameDialog} index={index} /> </div>}
+                                        </div>
+                                    ))}
+                                    <button onClick={addStage} className="flex items-center gap-2 bg-zinc-500 p-2 rounded cursor-pointer">Add stage <FaPlus /></button>
+                                    {stageNameDialog &&
+                                        <StageNameDialog
+                                            stageNameDialog={stageNameDialog}
+                                            setStageNameDialog={setStageNameDialog}
+                                            index={stageIndex}
+
+                                        />}
                                 </div>
-                            ))}
-                            <button onClick={addStage} className="flex items-center gap-2 bg-zinc-500 p-2 rounded cursor-pointer">Add stage <FaPlus /></button>
-                            {stageNameDialog &&
-                                <StageNameDialog
-                                    stageNameDialog={stageNameDialog}
-                                    setStageNameDialog={setStageNameDialog}
+                                <StageRender
                                     index={stageIndex}
+                                    stageDetails={stageInfo[stageIndex]}
+                                    gameFormat={gameFormat} />
 
-                                />}
+                            </div>
+                        </>
+                        <div className='col-span-2 grid grid-cols-3 gap-5'>
+                            <button onClick={() => handleStepChange("previous")} className='border border-zinc-600 rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
+                            <button type='button' onClick={()=>validateData()} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
+                            <button onClick={() => {
+                                validateData()
+                                setTimeout(()=>{
+                                    handleStepChange("next")
+                                },2000)
+                                
+                            }} className='font-bold bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
                         </div>
-                        <StageRender
-                            index={stageIndex}
-                            stageDetails={stageInfo[stageIndex]}
-                            gameFormat={gameFormat} />
-
-                    </div>
-                </>
-                <div className='col-span-2 grid grid-cols-3 gap-5'>
-                    <button onClick={() => handleStepChange("previous")} className='border border-zinc-600 rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                    <button className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
-                    <button onClick={() => handleStepChange("next")} className='font-bold bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
-                </div>
+                    </>}
             </section>
         </>
     )

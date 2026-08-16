@@ -2,7 +2,7 @@ import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/context/AuthProvider'
 import { ArrowLeftCircle } from 'lucide-react'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 
 function CreateSidebar({
@@ -10,6 +10,7 @@ function CreateSidebar({
     setActiveStep,
     handleStepChange
 }) {
+    const {tID} = useParams()
     const {user} = useAuth()
     const [tab, setTab] = useState("basicDetails")
     const sidebarStyling = (value) => {

@@ -5,16 +5,17 @@ import { IoHome, IoLogOutSharp } from "react-icons/io5";
 import { TbMessagesFilled } from "react-icons/tb";
 import { FaArrowCircleLeft, FaExclamation, FaHome, FaTrophy, FaUser } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthProvider";
 import { OrgContext } from "@/context/OrgProvider";
+import { OrganiationRoles, Roles } from "@/data/constants/roles";
 
 function SideBar({ login, currentTab, currentType }) {
-
+  const {tID} = useParams()
   const { logout, user } = useAuth()
-  const { orgData , loadOrgData, clearOrgData } = useContext(OrgContext)
+  const { orgData , loadOrgData, clearOrgData ,userOrgData } = useContext(OrgContext)
   const navigate = useNavigate()
-  const userOrgData = orgData?.oMembers?.find(item => item.userID._id == user?.userID)
+  // const userOrgData = orgData?.oMembers?.find(item => item.userID._id == user?.userID)
   const [userOrgRole,setUserOrgRole] = useState(userOrgData?.role)
 console.log('userRole',userOrgRole,userOrgData);
 
@@ -91,7 +92,7 @@ console.log('userRole',userOrgRole,userOrgData);
           {
             sidebarType == 'organizationMenu' &&
             <>
-              <li onClick={()=>navigate(`/dashboard/tournaments/${user.userID}`)} className={sidebarButtons('back')} ><FaArrowCircleLeft /> Back</li>
+              <li onClick={()=>navigate(`/organization/${user.userID}/tournaments`)} className={sidebarButtons('back')} ><FaArrowCircleLeft /> Back</li>
               <li onClick={()=>manageTab('home')} className={sidebarButtons('home')} ><FaHome/>Home </li>
               <li onClick={()=>manageTab("tournaments")} className={sidebarButtons("tournaments")} ><FaTrophy/> Tournaments</li>
               <li onClick={()=>manageTab("members")} className={sidebarButtons("members")} ><FaUserGroup/> Members</li>
@@ -99,7 +100,7 @@ console.log('userRole',userOrgRole,userOrgData);
               <li onClick={()=>manageTab("notification")} className={sidebarButtons("notification")} ><FaBell/> Notifications</li>
               <hr className="border w-full my-3" />
               {
-                userOrgRole == "Owner" && 
+                userOrgRole == OrganiationRoles.LEADER && 
                 <li onClick={()=>manageTab('settings')} className={sidebarButtons("settings")} ><FaGear /> Settings</li>
               }
             </>

@@ -20,3 +20,7 @@ export const reqJoinOrganizationAPI = async (orgID) => {
 export const cancelJoinOrganizationAPI = async (orgID) => {
     return await axiosConfig('PUT','/cancelJoinOrganization',{orgID})
 }
+
+export const getOrganizationTournamentsAPI = async(orgID) => {
+    return await axiosConfig('GET',`getOrgTournaments/${orgID}`,{})
+}

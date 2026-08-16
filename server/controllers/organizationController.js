@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const organization = require("../models/organizationModel");
 const { findOneAndDelete, findOneAndUpdate } = require("../models/accountsModel");
+const tournament = require("../models/tournamentModel");
 
 exports.createOrganizationController = async (req, res) => {
     console.log('create org=========');
@@ -114,6 +115,17 @@ exports.cancelJoinOrganizationController = async (req, res) => {
                 returnDocument: "after"
             })
             res.status(200).json(result)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json('server error')
+    }
+}
+
+exports.getOrganizationTournamentsController = async (req,res) => {
+    const {orgID} = req.params
+    try {
+        const result = await tournament.find({orgID})
+        res.status(200).json(result)
     } catch (error) {
         console.log(error);
         res.status(500).json('server error')
