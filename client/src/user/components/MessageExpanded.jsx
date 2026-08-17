@@ -1,42 +1,54 @@
 import { useAuth } from '@/context/AuthProvider'
 import { inputStyle } from '@/data/universalStyles'
 import { socket } from '@/services/webSocket'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaPaperPlane, FaUser } from 'react-icons/fa6'
 
 function MessageExpanded() {
     const [messageList, setMessageList] = useState([])
-    const [orientation,setOrientation] = useState(true)
+    const [orientation, setOrientation] = useState(true)
     console.log(messageList);
-    
-    const {user} = useAuth()
+
+    const { user } = useAuth()
     const textBubbleStyle = ' rounded  my-3  flex'
-    socket.on("sendMessage", (message) => {
+
+
+    const receiveMessage = (message) => {
         console.log(message);
-        
-        setMessageList(prev => [...prev, message.message])
-    })
+
+        setMessageList(prev => [...prev, message])
+    }
+
+
     const inputMessageRef = useRef()
     const handleSend = () => {
         const messageBody = inputMessageRef.current.value
-        socket.emit("sendMessage",messageBody)
-        console.log('message sent:',messageBody);
-        setMessageList(prev => [...prev,{
-            message:messageBody,
+        socket.emit("sendMessage", messageBody)
+        console.log('message sent:', messageBody);
+        setMessageList(prev => [...prev, {
+            message: messageBody,
             sender: user.username
         }])
     }
+
+    useEffect(() => {
+        socket.on('test1',receiveMessage)
+        return () => {
+            socket.off('test1',receiveMessage)
+        }
+
+    }, [])
     return (
         <>
-            <main className="flex flex-col  relative h-full">
+            <main className="flex flex-col  relative h-full ">
                 <div className="flex justify-center font-bold">
                     <h1>Message sender</h1>
                 </div>
-                <div className={`absolute bottom-0 w-full flex flex-col `}>
+                <div className={`absolute bottom-0 w-full h-9/10 flex flex-col overflow-y-auto flex-nowrap `}>
                     {
                         messageList.length > 0 &&
                         messageList.map((item, index) => (
-                            <div className={textBubbleStyle +  `${item.sender == user.username && ' justify-end'}`}>
+                            <div key={"message" + { index }} className={textBubbleStyle + `${item.sender == user.username && ' justify-end'}`}>
                                 <div className={` flex  items-center gap-4 bg-accent py-2 px-5`}>
                                     <FaUser />
                                     <div className='grow'>
@@ -57,7 +69,7 @@ function MessageExpanded() {
                         </div>
                     </div>
                     <div className='flex  w-full gap-2'>
-                        <input ref={inputMessageRef}  type="text" className={inputStyle + " grow"} />
+                        <input ref={inputMessageRef} type="text" className={inputStyle + " grow"} />
                         <div onClick={handleSend} className="py-2 px-4 border bg-[#2a2a2a] flex items-center rounded-full">
                             <FaPaperPlane />
                         </div>

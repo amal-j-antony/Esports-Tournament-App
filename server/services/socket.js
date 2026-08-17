@@ -1,14 +1,16 @@
 const setupSocket = (io) => {
     io.on('connection', (socket) => {
-        console.log('Listening...');
-        socket.on("sendMessage", (message) => {
-            console.log(message);
+        console.log('Connected...',socket.id);
 
-        })
-        io.emit('test', {
-            message: 'sent from server'
+        socket.on("sendMessage", (message) => {
+        console.log(message);
+        io.emit('test1', {
+            message: 'sent from server',
+            sender: 'server'
         })
     })
+    })    
+
 }
 
 module.exports = setupSocket
