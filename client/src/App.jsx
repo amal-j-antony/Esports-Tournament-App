@@ -55,8 +55,8 @@ function App() {
     if (result.status == 200) {
       console.log(result);
       login(result.data.details)
-      getOrgDetails(result.data.details.userID)
-      console.log("user ID", result.data.details.userID);
+      getOrgDetails(result?.data.details?.userID)
+      console.log("user ID", result?.data.details?.userID);
       socket.connect()
     } else {
       console.log("User not logged in");

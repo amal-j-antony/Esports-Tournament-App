@@ -10,6 +10,18 @@ function Header({ login,headerRef }) {
     const [showNotification, setShowNotification] = useState(false)
     const navigate = useNavigate()
     const { user } = useAuth()
+
+    const handleNav = (value) => {
+        if(!user.userID){
+            navigate('/login')
+        }else{
+            if(value == "tournaments"){
+                navigate(`/dashboard/${value}/${user.userID}`)
+            }else if(value == 'organization'){
+                navigate(`/${value}/${user.userID}/home`)
+            }
+        }
+    }
     
    
     return (
@@ -19,9 +31,9 @@ function Header({ login,headerRef }) {
                 <section className={`w-full flex justify-between items-center backdrop-blur-xl py-2 px-10 bg-card/10 `} >
                     <img onClick={() => navigate("/")} src="https://res.cloudinary.com/dwaaoyztz/image/upload/v1784392713/FIERZIO.gg_2_-Photoroom_o7mwm8.png" className='h-15 cursor-pointer' alt="" />
                     <ul className="flex items-center font-bold ">
-                        <Link to={`/dashboard/tournaments/${user.userID}`} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Tournaments</Link>
-                        <Link to={"/leaderboard"} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Leaderboard</Link>
-                        <Link to={`/organization/${user.userID}/home`} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Organization</Link>
+                        <button onClick={()=>handleNav('tournaments')} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Tournaments</button>
+                        <Link to={"/"} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Leaderboard</Link>
+                        <button onClick={()=>handleNav('organization')} className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Organization</button>
                         <li className='text-xl cursor-pointer hover:bg-accent p-3 rounded-2xl duration-500' >Squads</li>
                         {
                             user ?

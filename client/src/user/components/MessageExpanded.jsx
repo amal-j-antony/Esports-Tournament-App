@@ -40,11 +40,11 @@ function MessageExpanded() {
     }, [])
     return (
         <>
-            <main className="flex flex-col  relative h-full ">
+            <main className="flex flex-col relative h-full ">
                 <div className="flex justify-center font-bold">
                     <h1>Message sender</h1>
                 </div>
-                <div className={`absolute bottom-0 w-full h-9/10 flex flex-col overflow-y-auto flex-nowrap `}>
+                <div className={` w-full flex flex-col overflow-y-auto flex-nowrap absolute bottom-20 h-8/10`}>
                     {
                         messageList.length > 0 &&
                         messageList.map((item, index) => (
@@ -68,13 +68,14 @@ function MessageExpanded() {
                             </div>
                         </div>
                     </div>
-                    <div className='flex  w-full gap-2'>
+                    
+                </div>
+                <div className='flex  w-full gap-2 absolute bottom-0'>
                         <input ref={inputMessageRef} type="text" className={inputStyle + " grow"} />
                         <div onClick={handleSend} className="py-2 px-4 border bg-[#2a2a2a] flex items-center rounded-full">
                             <FaPaperPlane />
                         </div>
                     </div>
-                </div>
 
             </main>
         </>
