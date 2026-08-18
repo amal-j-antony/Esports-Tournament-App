@@ -92,7 +92,7 @@ console.log('userRole',userOrgRole,userOrgData);
           {
             sidebarType == 'organizationMenu' &&
             <>
-              <li onClick={()=>navigate(`/organization/${user.userID}/tournaments`)} className={sidebarButtons('back')} ><FaArrowCircleLeft /> Back</li>
+              <li onClick={()=>navigate(`/dashboard/discover/${user.userID}`)} className={sidebarButtons('back')} ><FaArrowCircleLeft /> Back</li>
               <li onClick={()=>manageTab('home')} className={sidebarButtons('home')} ><FaHome/>Home </li>
               <li onClick={()=>manageTab("tournaments")} className={sidebarButtons("tournaments")} ><FaTrophy/> Tournaments</li>
               <li onClick={()=>manageTab("members")} className={sidebarButtons("members")} ><FaUserGroup/> Members</li>

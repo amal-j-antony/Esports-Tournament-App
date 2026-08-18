@@ -3,4 +3,5 @@ import { serverURL } from "./serverURL";
 
 export const socket = io(`${serverURL}`,{
     autoConnect: false
+    
 })

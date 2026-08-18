@@ -24,3 +24,11 @@ export const updateTournamentStepThreeAPI = async (data) => {
 export const updateTournamentStageFourAPI = async (data) => {
     return await axiosConfig('PUT','updateTournamentStepFour',data)
 }
+
+export const updateTournamentStageFiveAPI = async (data) => {
+    return await axiosConfig('PUT','updateTournamentStepFive',data)
+}
+
+export const deleteTournamentAPI = async (tID) => {
+    return await axiosConfig('DELETE',`deleteTournament/${tID}`,{})
+}

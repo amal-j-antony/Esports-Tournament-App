@@ -122,3 +122,26 @@ exports.updateTournamentStageFourController = async (req,res) => {
         res.status(500).json('Server error')
     }
 }
+
+exports.updateTournamentStageFiveController = async (req,res) => {
+    const {
+
+    } = req.body
+}
+
+exports.deleteTournamentController = async (req,res) => {
+    const {tID} = req.params
+    try {
+        const result = await tournament.findByIdAndDelete({_id: tID})
+        res.status(200).json({
+            result,
+            tID
+        })
+    } catch (error) {
+        console.log({
+            controller: "deleteTournamentController",
+            error
+        });
+        res.status(500).json('Server Error')
+    }
+}

@@ -1,17 +1,15 @@
 import { recentSquads } from '@/data/dummySquad'
 import { dummyTournaments } from '@/data/dummyTournaments'
 import { popularGames } from '@/data/popularGames'
-import { Calendar, Gamepad, Gamepad2, List, Plus, PlusIcon, Target } from 'lucide-react'
+import { Calendar, Gamepad2, List, Plus, Target } from 'lucide-react'
 import React from 'react'
 import { FaExclamation, FaPlay, FaPlus, FaTrophy, FaUser } from 'react-icons/fa'
 import { FaUserGroup } from 'react-icons/fa6'
 import { GoDotFill } from 'react-icons/go'
-import { PiPlus } from 'react-icons/pi'
-import { Link } from 'react-router-dom'
 
 
 function UserHome() {
-    const memberStyle = ""
+    
     return (
         <>
             <main className='p-10 flex flex-col gap-5 '>
@@ -20,7 +18,7 @@ function UserHome() {
                 <h2 className='text-3xl font-bold'>Popular games</h2>
                 <div className="h-full flex gap-5 flex-nowrap md:flex-wrap overflow-auto scrollbar-none ">
                     {
-                        popularGames.map((item, index) => (
+                        popularGames.map((item) => (
                             <React.Fragment key={item.title}>
                                 <div className="relative shrink-0" >
                                     <img src={item.image} className='w-50 h-full object-cover rounded-2xl' alt="" />
@@ -45,7 +43,7 @@ function UserHome() {
                 <section className='container gap-10 flex flex-nowrap overflow-x-auto scrollbar-none'>
 
                     {
-                        dummyTournaments.slice(0, 3).map((item, index) => (
+                        dummyTournaments.slice(0, 3).map((item) => (
                             <div key={item.id + 1} className="flex-1 shrink-0 flex flex-col gap-2 p-10 bg-accent rounded-2xl">
                                 <div className='flex'>
                                     {item.status == "Registration Open" && <div className="border p-3 text-green-500 bg-zinc-800 rounded-2xl flex items-center gap-2">Open<GoDotFill /></div>}
@@ -101,7 +99,7 @@ function UserHome() {
                                 <h1 className='text-xl mb-5'>{item.joinedAt}</h1>
                                 <div className='flex flex-col gap-2 '>
                                     {
-                                        item.teamMembers.map((member,mIndex)=>(
+                                        item.teamMembers.map((member)=>(
                                             <div className='grid grid-cols-4 items-center text-center' key={"wpopop"+member.name}>
                                                 <img className='w-20' src={`https://api.dicebear.com/10.x/glyphs/svg?seed=${member.name}`} alt="" />
                                                 <h1>{member.name}</h1>

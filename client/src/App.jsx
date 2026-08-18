@@ -57,7 +57,12 @@ function App() {
       login(result.data.details)
       getOrgDetails(result?.data.details?.userID)
       console.log("user ID", result?.data.details?.userID);
+      socket.auth = {
+        user: result?.data.details?.userID
+      }
       socket.connect()
+      console.log('Socket connected',socket.auth);
+      
     } else {
       console.log("User not logged in");
 

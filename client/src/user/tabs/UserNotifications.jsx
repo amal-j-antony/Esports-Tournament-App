@@ -1,5 +1,4 @@
 import { notifications } from '@/data/dummyNotiofications'
-import React from 'react'
 import { MdClear } from 'react-icons/md'
 
 function UserNotifications() {

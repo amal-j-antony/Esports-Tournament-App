@@ -1,10 +1,13 @@
 import SideBar from '@/common/components/SideBar'
+import Component from '@/components/comp-514'
 import { OrgContext } from '@/context/OrgProvider'
 import { button } from '@/data/universalStyles'
 import { getOrganizationTournamentsAPI } from '@/services/organizationMethods'
+import { deleteTournamentAPI } from '@/services/tournamentMethods'
 import React, { useContext, useEffect, useState } from 'react'
 import { MdDelete } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 function OrgCreatedTournaments() {
   const navigate = useNavigate()
@@ -24,6 +27,28 @@ function OrgCreatedTournaments() {
     }
   }
 
+  const handleTournamentDelete = async (tID) => {
+    try {
+      const result = await deleteTournamentAPI(tID)
+      console.log("handleTournamentDelete",result);
+      if(result.status == 200){
+        toast('Tournament Deleted')
+        getTournaments()
+      }else if(result.status == 400){
+        toast('You do not have permission to delete Tournaments')
+      }else{
+        toast('Something went wrong, please try again...')
+      }
+    } catch (error) {
+      console.log({
+        Function:"handleTournamentDelete",
+        Component: "OrgCreatedTournaments",
+        error
+      });
+      
+    }
+  }
+
   useEffect(() => {
     getTournaments()
   }, [orgData?._id])
@@ -40,13 +65,13 @@ function OrgCreatedTournaments() {
           {
             tournamentData ?
               tournamentData.map((item, index) => (
-                <div key={"tournamentData"+index} className='grid grid-cols-6 w-9/10 p-10 bg-accent rounded-xl'>
+                <div key={"tournamentData"+index} className='grid grid-cols-6 w-9/10 p-10 bg-accent rounded-xl my-5'>
                   <span className='text-center'>{index+1}</span>
                   <div className="col-span-3 text-center">{item.name}</div>
                   <div className="grid grid-cols-[2fr_3fr_1fr] col-span-2 gap-5 justify-between items-center ">
                     <span className='border border-zinc-500 py-2 text-center rounded-xl'>{item.status}</span>
                     <button onClick={()=>navigate(`/updateTournament/${item._id}`)} className="border border-zinc-500 h-full py-2 rounded-xl text-center">Continue Editing</button>
-                    <button className='border border-zinc-500 h-full py-2 rounded-xl flex justify-center items-center'><MdDelete/></button>
+                    <button onClick={()=>handleTournamentDelete(item._id)} className='border border-zinc-500 h-full py-2 rounded-xl flex justify-center items-center'><MdDelete/></button>
                   </div>
                 </div>
               ))

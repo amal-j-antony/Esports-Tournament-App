@@ -5,7 +5,8 @@ const jwtAuthMiddleware = require("../middleware/jwtAuthMiddleware")
 const { authenticationController, jwtRefreshController, logoutController } = require("../controllers/authenticationiController")
 const { createOrganizationController, getOrganizationByIDController, getAllOrganizationsController, reqJoinOrganizationController, cancelJoinOrganizationController, getOrganizationTournamentsController } = require("../controllers/organizationController")
 const multerMiddleware = require("../middleware/multerMiddleware")
-const { createTournamentController, getTournamentByIdController, updateTournamentStepOneController, updateTournamentStepTwoController, updateTournamentStepThreeController, updateTournamentStageFourController } = require("../controllers/tournamentController")
+const { createTournamentController, getTournamentByIdController, updateTournamentStepOneController, updateTournamentStepTwoController, updateTournamentStepThreeController, updateTournamentStageFourController, updateTournamentStageFiveController, deleteTournamentController } = require("../controllers/tournamentController")
+const organizationMiddleware = require("../middleware/accessControlMiddleware")
 
 const router = new express.Router()
 
@@ -44,5 +45,8 @@ router.put('/updateTournamentStepOne',jwtAuthMiddleware,multerMiddleware.single(
 router.put('/updateTournamentStepTwo',jwtAuthMiddleware,updateTournamentStepTwoController)
 router.put('/updateTournamentStepThree',jwtAuthMiddleware,updateTournamentStepThreeController)
 router.put('/updateTournamentStepFour',jwtAuthMiddleware,updateTournamentStageFourController)
+router.put('/updateTournamentStepFive',jwtAuthMiddleware,updateTournamentStageFiveController)
+
+router.delete('/deleteTournament/:tID',jwtAuthMiddleware,organizationMiddleware,deleteTournamentController)
 
 module.exports = router
