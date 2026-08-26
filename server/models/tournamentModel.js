@@ -121,8 +121,21 @@ const tournamentSchema = new mongoose.Schema({
             type: String,
             default: []
         }
-    ]
+    ],
+    
+    schedule: {
+        registrationDate: { type: Date, default:Date.now },
+        registrationTime: { type: String, default: "00:00:00"},
+        startDate: { type: Date, default:Date.now },
+        startTime: { type: String, default: "00:00:00"},
+        checkIn: {type: Boolean,default: true},
+        checkInMinutes: {type: Number, default:30}
+    },
+    
 
+},
+{
+    timestamps: true
 })
 
 const tournament = mongoose.model('tournaments', tournamentSchema)

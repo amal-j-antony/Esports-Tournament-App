@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 
 export function Stepper({ steps }) {
-    const firstStep = steps[0]
+    
     const lastStep = steps[steps.length - 1]
     const gridLength = steps.length
     const [activeStep, setActiveStep] = useState(1)
@@ -45,8 +45,7 @@ export function Stepper({ steps }) {
     )
 }
 
-export function StepperTournamentWizard({ steps,activeStep,setActiveStep }) {
-    const firstStep = steps[0]
+export function StepperTournamentWizard({ steps,activeStep,setActiveStep }) {    
     const lastStep = steps[steps.length - 1]    
     
     return (

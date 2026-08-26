@@ -36,7 +36,7 @@ exports.createOrganizationController = async (req, res) => {
     }
 }
 
-exports.getOrganizationByIDController = async (req, res) => {
+exports.getOrganizationByUserIDController = async (req, res) => {
     console.log('-------getORG----------');
 
     const { userID } = req.params
@@ -129,5 +129,19 @@ exports.getOrganizationTournamentsController = async (req,res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json('server error')
+    }
+}
+
+exports.getOrganizationByID_controller = async (req,res) => {
+    const {orgID} = req.params
+    try {
+        const result = await organization.findById(orgID)
+        res.status(200).json(result)
+    }catch(error) {
+        console.log({
+            location: "getOrganizationByID_controller",
+            error
+        });
+        res.status(500).json('500 server error')
     }
 }

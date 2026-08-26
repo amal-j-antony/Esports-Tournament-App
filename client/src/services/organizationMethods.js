@@ -6,7 +6,7 @@ export const createOrganizationAPI = async (reqData) => {
 }
 
 export const getUserOrganizationAPI = async (userID) => {
-    return await axiosConfig('GET',`/getOrganization/${userID}`,{})
+    return await axiosConfig('GET',`/getOrganizationByUser/${userID}`,{})
 }
 
 export const getAllOrganizationsAPI = async () => {
@@ -22,5 +22,9 @@ export const cancelJoinOrganizationAPI = async (orgID) => {
 }
 
 export const getOrganizationTournamentsAPI = async(orgID) => {
-    return await axiosConfig('GET',`getOrgTournaments/${orgID}`,{})
+    return await axiosConfig('GET',`/getOrgTournaments/${orgID}`,{})
+}
+
+export const getOrganizationByID_API = async(orgID) => {
+    return await axiosConfig("GET",`/getOrganization/${orgID}`,{})
 }

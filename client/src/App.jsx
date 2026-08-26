@@ -23,19 +23,20 @@ import Organization from './organization/Organization';
 import OrganizationCreatorWizard from './organization/create Organization/OrganizationCreatorWizard';
 import { socket } from './services/webSocket';
 import { NoOrgMenu } from './organization/noOrgMenu';
-import { getUserOrganizationAPI } from './services/organizationMethods';
 import { OrgContext } from './context/OrgProvider';
 import OrgCreatedTournaments from './organization/OrgCreatedTournaments';
 import OrganizationSettings from './organization/OrganizationSettings';
 import ViewOrganizations from './organization/allOrganizations/ViewOrganizations';
 import { HashLoader } from 'react-spinners'
 import CreateSquad from './user/pages/squads/CreateSquad';
+import { getUserOrganizationAPI } from './services/organizationMethods';
+
+
 
 function App() {
-  const { login, user } = useAuth()
-  const { loadOrgData, orgData } = useContext(OrgContext)
+  const { login } = useAuth()
+  const { loadOrgData } = useContext(OrgContext)
   const [loading, setLoading] = useState(true)
-
 
   const getOrgDetails = async (userID) => {
     try {
@@ -43,40 +44,42 @@ function App() {
       console.log("orgdetails-userID", userID);
 
       if (result.status == 200) {
-        loadOrgData(result.data,userID)
+        loadOrgData(result.data, userID)
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  const tryAuth = async () => {
-    const result = await getAuthenticationStatusAPI()
-    if (result.status == 200) {
-      console.log(result);
-      login(result.data.details)
-      getOrgDetails(result?.data.details?.userID)
-      console.log("user ID", result?.data.details?.userID);
-      socket.auth = {
-        user: result?.data.details?.userID
-      }
-      socket.connect()
-      console.log('Socket connected',socket.auth);
-      
-    } else {
-      console.log("User not logged in");
-
-    }
-  }
-
-
-
   useEffect(() => {
+
+    const tryAuth = async () => {
+      const result = await getAuthenticationStatusAPI()
+      if (result.status == 200) {
+        console.log(result);
+        login(result.data.details)
+        getOrgDetails(result?.data.details?.userID)
+        console.log("user ID", result?.data.details?.userID);
+        socket.auth = {
+          user: result?.data.details?.userID
+        }
+        socket.connect()
+        console.log('Socket connected', socket.auth);
+
+      } else {
+        console.log("User not logged in");
+
+      }
+    }
     tryAuth()
+    
+  }, [])
+
+  useEffect(()=>{
     setTimeout(() => {
       setLoading(false)
     }, 3000)
-  }, [])
+  },[])
   return (
     <>
       {
@@ -90,7 +93,7 @@ function App() {
               {/* Home */}
               <Route path='/' element={<Home />} />
               {/* update Tournament */}
-              <Route path='/updateTournament/:TID' element={<CreateTournament/>} />
+              <Route path='/updateTournament/:TID' element={<CreateTournament />} />
               {/* create Tournament */}
               <Route path='/createTournament' element={<CreateTournament />} />
               {/* login */}
@@ -112,10 +115,11 @@ function App() {
               {/* dashboard: clan*/}
               <Route path='/dashboard/clan/:userID' element={<Clan />} />
               {/* tournament details */}
-              <Route path='/tournaments/:tournamentID' element={<TournamentDetails />} />
+              <Route path='/tournaments/:TID' element={<TournamentDetails />} />
               {/* Leaderboard */}
               <Route path='/leaderboard/:userID' element={<LeaderBoard />} />
               {/* Organization page home */}
+              <Route path='/organization/view/:orgID' element={<Organization view />} />
               <Route path='/organization/:userID/home' element={<Organization />} />
               {/* organization Tournaments */}
               <Route path='/organization/:userID/tournaments' element={<OrgCreatedTournaments />} />
@@ -128,7 +132,7 @@ function App() {
               {/* join existing organizations */}
               <Route path='/view-organization' element={<ViewOrganizations />} />
               {/* create Squad */}
-              <Route path='/createSquad' element={<CreateSquad/>} />
+              <Route path='/createSquad' element={<CreateSquad />} />
               {/* Page not found */}
               <Route path='/*' element={<PageNotFound />} />
             </Routes>

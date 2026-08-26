@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
                     return axiosInstance(originalRequest)
                 } catch (error) {
                     logoutHandler?.()
-                    return promise.reject(error)
+                    return Promise.reject(error)
                 }
                 // const result = await getNewAccessTokenAPI()
                 // if(result.status === 401){

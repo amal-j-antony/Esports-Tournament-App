@@ -1,12 +1,11 @@
 import { useAuth } from '@/context/AuthProvider'
 import { inputStyle } from '@/data/universalStyles'
 import { socket } from '@/services/webSocket'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FaPaperPlane, FaUser } from 'react-icons/fa6'
 
 function MessageExpanded() {
-    const [messageList, setMessageList] = useState([])
-    const [orientation, setOrientation] = useState(true)
+    const [messageList, setMessageList] = useState([])    
     console.log(messageList);
 
     const { user } = useAuth()
@@ -23,18 +22,18 @@ function MessageExpanded() {
     const inputMessageRef = useRef()
     const handleSend = () => {
         const messageBody = inputMessageRef.current.value
-        socket.emit("sendMessage", messageBody)
-        console.log('message sent:', messageBody);
-        setMessageList(prev => [...prev, {
+        socket.emit("sendMessage", {
             message: messageBody,
             sender: user.username
-        }])
+        })
+        console.log('message sent:', messageBody);
+        
     }
 
     useEffect(() => {
-        socket.on('test1',receiveMessage)
+        socket.on('receiveMessage',receiveMessage)
         return () => {
-            socket.off('test1',receiveMessage)
+            socket.off('receiveMessage',receiveMessage)
         }
 
     }, [])
@@ -48,8 +47,8 @@ function MessageExpanded() {
                     {
                         messageList.length > 0 &&
                         messageList.map((item, index) => (
-                            <div key={"message" + { index }} className={textBubbleStyle + `${item.sender == user.username && ' justify-end'}`}>
-                                <div className={` flex  items-center gap-4 bg-accent py-2 px-5`}>
+                            <div key={"message" + { index }} className={textBubbleStyle + `${item.sender == user.username ? ' justify-end' : 'justify-start' }`}>
+                                <div className={` flex items-center gap-4 bg-accent py-2 px-5`}>
                                     <FaUser />
                                     <div className='grow'>
                                         <h1>{item.sender}</h1>

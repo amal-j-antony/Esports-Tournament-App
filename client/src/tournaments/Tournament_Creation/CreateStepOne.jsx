@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { esportsTitles } from '@/data/gameList';
-import { Switch } from '@/components/ui/switch';
-import { InviteOnly } from '../TournamentComponents/TournamentTooltips';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import { SERIES_FORMAT } from '@/data/constants/seriesFormat'; import { button } from '@/data/universalStyles';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { button } from '@/data/universalStyles';
 import { StepperPreload } from '@/common/components/Loader';
 import { toast } from 'react-toastify';
 import { OrgContext } from '@/context/OrgProvider';
 import { createTournamentAPI, updateTournamentStepOneAPI } from '@/services/tournamentMethods';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '@/services/axiosInstance';
 
 
@@ -19,7 +17,7 @@ function CreateStepOne({ handleStepChange, getTournamentData }) {
     const { orgData } = useContext(OrgContext)
     const { register, control, setValue, formState, trigger, getValues } = useFormContext()
     const gameList = esportsTitles.map(item => item.name)
-    const textAndIconStyle = 'flex items-center gap-2'
+    const navigate = useNavigate()
     const inputStyle = 'bg-accent px-10 py-3  rounded-xl '
     const selectedGame = useWatch({
         control,
@@ -32,7 +30,7 @@ function CreateStepOne({ handleStepChange, getTournamentData }) {
     })
 
     const handleAPIpush = async (form) => {
-        let result = null
+        let result
         try {
             if (TID) {
                 result = await updateTournamentStepOneAPI(form)
@@ -82,7 +80,7 @@ function CreateStepOne({ handleStepChange, getTournamentData }) {
 
             const result = await handleAPIpush(form)
             if (result.status == 200) {
-                toast('Progress Saved')
+                toast('Data Updated')
             } else {
                 toast('Something went wrong,please try again')
             }
@@ -90,12 +88,20 @@ function CreateStepOne({ handleStepChange, getTournamentData }) {
             setTimeout(() => {
                 setLoading(false)
             }, 2000)
+            !TID && navigate(`/updateTournament/${result.data._id}`)
         } else {
             toast('One or more fields have errors')
             console.log(formState.errors);
-            
+
         }
     }
+
+    const checkDirty = [
+        "name",
+        'game',
+        'description',
+        'image'
+    ].some(item => formState.dirtyFields[item])
 
     useEffect(() => {
         if (tournamentImage && !TID) {
@@ -104,13 +110,15 @@ function CreateStepOne({ handleStepChange, getTournamentData }) {
         } else if (TID) {
             setPreview(`${axiosInstance.defaults.baseURL}/${tournamentImage}`)
         }
-    }, [tournamentImage])
+    }, [tournamentImage, TID])
+
+    
 
     useEffect(() => {
         const gameFormat = esportsTitles.find(item => item.name == selectedGame)?.config.format
         // console.log(gameFormat);
         setValue("format", gameFormat)
-    }, [selectedGame,TID])
+    }, [selectedGame, TID])
 
     // console.log("selected game = ",selectedGame);
 
@@ -164,15 +172,14 @@ function CreateStepOne({ handleStepChange, getTournamentData }) {
 
                     <div className='col-span-2 grid grid-cols-3 gap-5'>
                         <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                        <button type='button' onClick={() => submit()} className='bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
-                        <button onClick={() => {
-                            submit()
+                        <button type='button' onClick={() => submit()} className='bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Verify and Save Changes </button>
+                        <button disabled={checkDirty} onClick={() => {                                                        
                             setLoading(true)
-                            setTimeout(()=>{
+                            setTimeout(() => {
                                 setLoading(false)
                                 handleStepChange("next")
-                            },2000)
-                        }} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
+                            }, 2000)
+                        }} className={` rounded-xl p-3 hover:bg-accent-foreground duration-500 bg-[#2a2a2a] ${checkDirty ? 'cursor-not-allowed ' : 'cursor-pointer '} `} >Save and Next</button>
                     </div>
                 </>}
             </form>

@@ -17,11 +17,11 @@ const setupSocket = (io) => {
             io.emit('users',users)
         })
 
-        socket.on("sendMessage", (message) => {
-        console.log(message);
-        io.emit('test1', {
-            message: 'sent from server',
-            sender: 'server'
+        socket.on("sendMessage", (data) => {
+        console.log(data);
+        io.emit('receiveMessage', {
+            message: data.message,
+            sender: data.sender
         })
     })
     })    

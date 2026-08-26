@@ -1,40 +1,32 @@
-import { Select } from '@/components/ui/select'
+
 import { Switch } from '@/components/ui/switch'
-import { TooltipTrigger } from '@/components/ui/tooltip'
-import React, { useEffect, useState } from 'react'
-import { IoInformationCircle } from 'react-icons/io5'
-import { GroupNumInfo, GroupStageInfo, InviteOnly, NumberOfMatchesInfo, NumRoundsInfo, TournamentFormatInfo } from '../TournamentComponents/TournamentTooltips'
+import { useEffect, useState } from 'react'
+import { InviteOnly } from '../TournamentComponents/TournamentTooltips'
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { SERIES_FORMAT } from '@/data/constants/seriesFormat'
-import { GAME_TYPES } from '@/data/constants/gameTypes'
-import { format } from 'date-fns'
 import { FaPlus } from 'react-icons/fa6'
-import { MdEdit } from 'react-icons/md'
 import { StageNameDialog } from '../TournamentComponents/StageEditDialogs'
-import { STAGE_TYPE } from '@/data/constants/stageTypes'
 import { StageSettingsHandler } from '@/common/components/Dropdown'
 import StageRender from '../TournamentComponents/StageRender'
-import { log2 } from 'three/src/nodes/math/MathNode.js'
 import { useParams } from 'react-router-dom'
 import { StepperPreload } from '@/common/components/Loader'
 import { toast } from 'react-toastify'
 import { updateTournamentStepTwoAPI } from '@/services/tournamentMethods'
+import { ErrorMessage } from '@hookform/error-message'
+import ShowFormError from '../TournamentComponents/ShowFormError'
 
 
 function CreateStepTwo({
-    gameNames,
     handleStepChange,
     getTournamentData
 }) {
     const [loading, setLoading] = useState(false)
     const { TID } = useParams()
-    const { register, control, setValue ,trigger, getValues, formState } = useFormContext()
+    const { register, control, setValue, trigger, getValues, formState } = useFormContext()
     const [stageIndex, setStageIndex] = useState(0)
     console.log(stageIndex);
-    
-    const [stageCount, setStageCount] = useState(0)
+
     const [stageNameDialog, setStageNameDialog] = useState(false)
-    const textAndIconStyle = 'flex items-center gap-2'
     const inputStyle = 'bg-accent px-10 py-3  rounded-xl '
     const [gameFormat, stageInfo, maxTeams, minTeams] = useWatch({
         control,
@@ -59,33 +51,7 @@ function CreateStepTwo({
         })
     }
 
-    const elimTeamSizes = (value) => {
-        const teamArray = []
-        for (let i = 2; i <= value; i++) {
-            let slots = 2 ** i
-            teamArray.push(slots)
-        }
-        return teamArray
-    }
 
-    const calcMinTeamSize = () => {
-        const exponent = log2(maxTeams)
-        const minTeamSize = (2 ** (exponent - 1) + 1)
-        console.log(minTeamSize);
-        setValue("minTeamSize", minTeamSize)
-    }
-
-    // const teamInputType = () => {
-    //     if (groupStageSettings.enabled) {
-    //         if (groupStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && groupStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
-    //             return "varibaleSlotPreset"
-    //         } else return "fixedSlotPreset"
-    //     } else {
-    //         if (mainStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && mainStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
-    //             return "varibaleSlotPreset"
-    //         } else return "fixedSlotPreset"
-    //     }
-    // }
 
     const handleStageChange = (index) => {
 
@@ -96,32 +62,32 @@ function CreateStepTwo({
 
     const sendData = async (payload) => {
         console.log('ready for send');
-        
+
         setLoading(true)
         try {
             const result = await updateTournamentStepTwoAPI(payload)
             console.log(result);
-            
-            if(result.status == 200){
+
+            if (result.status == 200) {
                 toast('Data updated')
-            }else{
+            } else {
                 toast('Something went wrong')
             }
         } catch (error) {
             console.log(error)
             toast('Something went wrong, please try again')
-            
+
         }
         getTournamentData()
-        setTimeout(()=>{
+        setTimeout(() => {
             setLoading(false)
-        },2000)
+        }, 2000)
     }
 
     const preparePayload = () => {
         const data = getValues()
         const payload = {
-            hostMode: data.hostMode,            
+            hostMode: data.hostMode,
             settings: {
                 inviteOnly: data.inviteOnly,
                 maxTeamCount: data.maxTeamSize,
@@ -131,21 +97,29 @@ function CreateStepTwo({
             tID: TID
         }
         console.log(payload);
-        
+
         sendData(payload)
     }
 
     const validateData = async () => {
-        const valid = await trigger(['hostMode','minTeamSize','maxTeamSize','stageInfo'])
-        console.log('valid:',formState.errors);
-        
-        if(valid){
+        const valid = await trigger(['hostMode', 'minTeamSize', 'maxTeamSize', 'stageInfo'])
+        console.log('valid:', formState.errors);
+
+        if (valid) {
             preparePayload()
-        }else{
+        } else {
             toast('One or more fields have errors')
             return
         }
     }
+
+    const checkDirty = [
+        "inviteOnly",
+        "maxTeamSize",
+        "minTeamSize",
+        "hostMode",
+        "stageInfo"
+    ].some(item => formState.dirtyFields[item])
 
     useEffect(() => {
         console.log("gameFormat", gameFormat);
@@ -163,7 +137,7 @@ function CreateStepTwo({
                         <h1>Tournament format</h1>
                         <span className={inputStyle}>{gameFormat ? gameFormat === SERIES_FORMAT.HEAD_TO_HEAD ? "Head To Head" : "Lobby" : "Select game to set tournament format"}</span>
                         <label htmlFor="">Tournament Hosting mode</label>
-                        <select {...register('hostMode')}  className={inputStyle}>
+                        <select {...register('hostMode')} className={inputStyle}>
                             <option value="online">Online</option>
                             <option value="offline">Offline</option>
                         </select>
@@ -192,11 +166,17 @@ function CreateStepTwo({
                                     ))}
                                 </select>
                         } */}
-                        <input {...register("maxTeamSize",{valueAsNumber:true})} value={maxTeams} type="number" placeholder='Enter total number of teams' className={inputStyle} />
-                                
+                        <input {...register("maxTeamSize", { valueAsNumber: true })} value={maxTeams} type="number" placeholder='Enter total number of teams' className={inputStyle} />
+
 
                         <label htmlFor="">Minimum Number of Teams</label>
-                        <input required {...register("minTeamSize",{valueAsNumber:true})} defaultValue={minTeams} type="text" placeholder='Enter minimum number of Teams' className={inputStyle} />
+                        <input required {...register("minTeamSize", { valueAsNumber: true })} defaultValue={minTeams} type="text" placeholder='Enter minimum number of Teams' className={inputStyle} />
+                        <ErrorMessage
+                            name='minTeamSize'
+                            render={({ message }) => (
+                                <ShowFormError errorText={message} />
+                            )}
+                        />
                         <hr className="col-span-2" />
                         <h1 className="col-span-2 text-2xl font-bold">Tournament Stage setup</h1>
                         <>
@@ -226,15 +206,16 @@ function CreateStepTwo({
                             </div>
                         </>
                         <div className='col-span-2 grid grid-cols-3 gap-5'>
-                            <button onClick={() => handleStepChange("previous")} className='border border-zinc-600 rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                            <button type='button' onClick={()=>validateData()} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
-                            <button onClick={() => {
-                                validateData()
-                                setTimeout(()=>{
+                            <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
+                            <button type='button' onClick={() => validateData()} className='bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Verify and Save Changes </button>
+                            <button disabled={checkDirty} onClick={() => {
+                                setLoading(true)
+                                setTimeout(() => {
                                     handleStepChange("next")
-                                },2000)
-                                
-                            }} className='font-bold bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
+                                    setLoading(false)
+                                }, 1000)
+
+                            }} className={`${checkDirty ? 'cursor-not-allowed' : 'cursor-pointer'} font-bold bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 `} >Save and Next</button>
                         </div>
                     </>}
             </section>
@@ -358,3 +339,31 @@ export default CreateStepTwo
                                     <input {...register("groupStage.matchCount")} type="text" placeholder='Enter number of Matches' className={inputStyle} />
                                 </>
                         } */}
+
+// const elimTeamSizes = (value) => {
+//         const teamArray = []
+//         for (let i = 2; i <= value; i++) {
+//             let slots = 2 ** i
+//             teamArray.push(slots)
+//         }
+//         return teamArray
+//     }
+
+//     const calcMinTeamSize = () => {
+//         const exponent = log2(maxTeams)
+//         const minTeamSize = (2 ** (exponent - 1) + 1)
+//         console.log(minTeamSize);
+//         setValue("minTeamSize", minTeamSize)
+//     }
+
+//     const teamInputType = () => {
+//         if (groupStageSettings.enabled) {
+//             if (groupStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && groupStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
+//                 return "varibaleSlotPreset"
+//             } else return "fixedSlotPreset"
+//         } else {
+//             if (mainStageSettings.stageFormat != GAME_TYPES.SINGLE_ELIMINATION && mainStageSettings.stageFormat != GAME_TYPES.DOUBLE_ELIMINATION) {
+//                 return "varibaleSlotPreset"
+//             } else return "fixedSlotPreset"
+//         }
+//     }                    

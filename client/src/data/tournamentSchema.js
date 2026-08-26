@@ -1,6 +1,19 @@
-import { format } from "date-fns";
+
 import z from "zod";
 import { SERIES_FORMAT } from "./constants/seriesFormat";
+
+
+const dateCheck = z.date().refine((date) => {
+    const selected = new Date(date)
+    selected.setHours(0, 0, 0, 0)
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return selected >= today
+},
+    { message: "You have selected an older date ,Please check your entered date" }
+)
 
 
 const baseSchema = z.object({
@@ -9,7 +22,10 @@ const baseSchema = z.object({
     game: z.string().nonempty("Game selection required"),
     maxTeamSize: z.number().min(8, "Max team size cannot be lower than 4"),
     minTeamSize: z.number().min(4, "Minimum team count cannot be lower than 4"),
-   
+    registrationDate: dateCheck,
+    startDate: dateCheck,
+    checkInMinutes: z.number(),
+    checkIn : z.boolean()
 })
 
 const stageSchema = z.object({
@@ -22,32 +38,35 @@ export const tournamentSchema = z.discriminatedUnion("format", [
     baseSchema.extend({
         format: z.literal(SERIES_FORMAT.HEAD_TO_HEAD),
         stageInfo: z.array(
-            stageSchema.extend({                
+            stageSchema.extend({
                 stageType: z.string().min(1, "Game type selection required"),
-                roundsCount: z.number().min(1,"Round count cannot be zero")
+                roundsCount: z.number().min(1, "Round count cannot be zero")
             })
         )
     }),
     baseSchema.extend({
         format: z.literal(SERIES_FORMAT.LOBBY),
         stageInfo: z.array(
-            stageSchema.extend({                
+            stageSchema.extend({
                 matchCount: z.number().min(1, "Match count cannot be zero"),
             })
         )
     })
 ]
-
-
-
-
-
 ).superRefine((data, ctx) => {
     if (data.minTeamSize > data.maxTeamSize) {
         ctx.addIssue({
             code: "custom",
             path: ["maxTeamSize"],
             message: "Maximum team size cannot be smaller than minimum team size"
+        })
+    }
+
+    if (data.checkIn && data.checkInMinutes < 30) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["checkInMinutes"],
+            message: "Check in time must be a minimum of 30 minutes"
         })
     }
 })

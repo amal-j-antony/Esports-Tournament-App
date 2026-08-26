@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { esportsTitles } from '@/data/gameList'
 import CreateStepOne from './CreateStepOne';
 import CreateSidebar from './CreateSidebar';
@@ -7,7 +7,6 @@ import CreateStepThree from './CreateStepThree';
 import { FormProvider, useForm } from 'react-hook-form';
 import CreateStepFour from './CreateStepFour';
 import CreateStepFive from './CreateStepFive';
-import SideBar from '@/common/components/SideBar';
 import { StepperTournamentWizard } from '@/common/components/Stepper';
 import CreateTournamentPreview from './CreateTournamentPreview';
 import { tournamentSchema } from '@/data/tournamentSchema';
@@ -31,6 +30,7 @@ function CreateTournament() {
             const result = await getTournamentByIdAPI(TID)
             console.log("getTournamentData",result);
             if (result.status == 200) {
+
                 methods.reset({
                     name: result.data?.name ?? "",
                     game: result.data?.game ?? "",
@@ -56,10 +56,12 @@ function CreateTournament() {
                     rules: result.data?.rules ?? [],
                     enableRewards: result.data?.enableRewards ?? true,
                     rewards: result.data?.rewards ?? [],
-                    registrationDate: result.data?.registrationDate ?? "",
-                    checkIn: result.data?.checkIn ?? true,
-                    checkInMinutes: result.data?.checkInMinutes ?? 0,
-                    startDate: result.data?.startDate ?? "",
+                    registrationDate: new Date(result.data?.schedule?.registrationDate) ,
+                    registrationTime: result.data?.schedule.registrationTime ?? "00:00:00",
+                    checkIn: result.data?.schedule?.checkIn ?? true,
+                    checkInMinutes: result.data?.schedule?.checkInMinutes ?? 0,
+                    startDate: new Date(result.data?.schedule?.startDate),
+                    startTime: result.data?.schedule?.startTime ?? "00:00:00"
                 })
             }
         } catch (error) {
@@ -112,9 +114,11 @@ function CreateTournament() {
             enableRewards: true,
             rewards: [],
             registrationDate: "",
+            registrationTime: "",
             checkIn: true,
-            checkInMinutes: 0,
+            checkInMinutes: 30,
             startDate: "",
+            startTime: ""
         }
     })
     const output = methods.watch()
@@ -195,8 +199,7 @@ function CreateTournament() {
                         //step 5
                         activeStep == 5 &&
                         <CreateStepFive
-                            activeStep={activeStep}
-                            setActiveStep={setActiveStep}
+                            getTournamentData={getTournamentData}
                             handleStepChange={handleStepChange}
                         />
                     }

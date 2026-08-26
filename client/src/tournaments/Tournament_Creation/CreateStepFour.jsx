@@ -1,25 +1,24 @@
 import { Switch } from '@/components/ui/switch'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { PodiumRewardsInfo } from '../TournamentComponents/TournamentTooltips'
-import currencies from '@/data/currencies'
-import { PiPlusLight } from 'react-icons/pi'
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { FaEdit } from 'react-icons/fa'
 import { MdOutlineEdit } from 'react-icons/md'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 import EditRewardsDialog from '../TournamentComponents/EditRewardsDialog'
 import DeleteRewardDialog from '../TournamentComponents/DeleteRewardDialog'
 import { useParams } from 'react-router-dom'
-import { updateTournamentStageFourAPI } from '@/services/tournamentMethods'
 import { StepperPreload } from '@/common/components/Loader'
+import { updateTournamentStepFourAPI } from '@/services/tournamentMethods'
 
 function CreateStepFour({
-  handleStepChange
+  handleStepChange,
+  getTournamentData
+
 }) {
   const { TID } = useParams()
   const [loading, setLoading] = useState(false)
-  const { register, control, getValues } = useFormContext()
+  const {  control, getValues , formState } = useFormContext()
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   console.log(editOpen);
@@ -35,7 +34,7 @@ function CreateStepFour({
     control,
     name: "enableRewards"
   })
-  const { field, append, remove, update } = useFieldArray({
+  const { append, remove, update } = useFieldArray({
     control,
     name: "rewards"
   })
@@ -87,7 +86,7 @@ function CreateStepFour({
     }
     try {
       setLoading(true)
-      const result = await updateTournamentStageFourAPI(payload)
+      const result = await updateTournamentStepFourAPI(payload)
 
       if (result.status == 200) {
         toast('Data Updated')
@@ -103,6 +102,8 @@ function CreateStepFour({
       setLoading(false)
     }, 1000)
   }
+
+  const checkDirty = !!formState.dirtyFields.rewards
 
   const validateData = () => {
     const data = getValues()
@@ -169,17 +170,17 @@ function CreateStepFour({
 
             <div className='col-span-2 grid grid-cols-3 gap-5'>
               <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-              <button type='button' onClick={() => validateData()} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
-              <button onClick={() => {
+              <button type='button' onClick={() => validateData()} className='bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
+              <button disabled={checkDirty} onClick={() => {
                 const { enableRewards } = getValues()
                 setLoading(true)
                 enableRewards && validateData()
-                setTimeout(()=>{
+                setTimeout(() => {
                   setLoading(false)
                   handleStepChange("next")
-                },1000)
-                
-              }} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save and Next</button>
+                }, 1000)
+
+              }} className={`bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 ${checkDirty ? 'cursor-not-allowed ' : 'cursor-pointer '}`} >Save and Next</button>
             </div>
           </>}
       </main>

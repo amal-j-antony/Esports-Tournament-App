@@ -3,9 +3,9 @@ const { registerController, loginController, googleAuthenticationController, get
 const { testController } = require("../controllers/testController")
 const jwtAuthMiddleware = require("../middleware/jwtAuthMiddleware")
 const { authenticationController, jwtRefreshController, logoutController } = require("../controllers/authenticationiController")
-const { createOrganizationController, getOrganizationByIDController, getAllOrganizationsController, reqJoinOrganizationController, cancelJoinOrganizationController, getOrganizationTournamentsController } = require("../controllers/organizationController")
+const { createOrganizationController, getOrganizationByUserIDController, getAllOrganizationsController, reqJoinOrganizationController, cancelJoinOrganizationController, getOrganizationTournamentsController, getOrganizationByID_controller } = require("../controllers/organizationController")
 const multerMiddleware = require("../middleware/multerMiddleware")
-const { createTournamentController, getTournamentByIdController, updateTournamentStepOneController, updateTournamentStepTwoController, updateTournamentStepThreeController, updateTournamentStageFourController, updateTournamentStageFiveController, deleteTournamentController } = require("../controllers/tournamentController")
+const { createTournamentController, getTournamentByIdController, updateTournamentStepOneController, updateTournamentStepTwoController, updateTournamentStepThreeController, updateTournamentStageFourController, updateTournamentStageFiveController, deleteTournamentController, getAllTournamentsController, updateTournamentStatusController } = require("../controllers/tournamentController")
 const organizationMiddleware = require("../middleware/accessControlMiddleware")
 
 const router = new express.Router()
@@ -31,14 +31,16 @@ router.get("/logout",logoutController)
 router.get('/users',jwtAuthMiddleware,getAllAccountsController)
 
 //organization
+router.get('/getOrganization/:orgID',jwtAuthMiddleware,getOrganizationByID_controller)
 router.post("/create-organization",jwtAuthMiddleware,multerMiddleware.single("oLogo"),createOrganizationController)
 router.get('/getOrganizations',jwtAuthMiddleware,getAllOrganizationsController)
-router.get('/getOrganization/:userID',jwtAuthMiddleware,getOrganizationByIDController)
+router.get('/getOrganizationByUser/:userID',jwtAuthMiddleware,getOrganizationByUserIDController)
 router.post('/reqJoinOrganization',jwtAuthMiddleware,reqJoinOrganizationController)
 router.put('/cancelJoinOrganization',jwtAuthMiddleware,cancelJoinOrganizationController)
 router.get('/getOrgTournaments/:orgID',jwtAuthMiddleware,getOrganizationTournamentsController)
 
 //tournament
+router.get('/allTournaments',jwtAuthMiddleware,getAllTournamentsController)
 router.post('/createTournament',jwtAuthMiddleware,multerMiddleware.single('image'),createTournamentController)
 router.get('/tournament/:tID',jwtAuthMiddleware,getTournamentByIdController)
 router.put('/updateTournamentStepOne',jwtAuthMiddleware,multerMiddleware.single('image'),updateTournamentStepOneController)
@@ -46,7 +48,7 @@ router.put('/updateTournamentStepTwo',jwtAuthMiddleware,updateTournamentStepTwoC
 router.put('/updateTournamentStepThree',jwtAuthMiddleware,updateTournamentStepThreeController)
 router.put('/updateTournamentStepFour',jwtAuthMiddleware,updateTournamentStageFourController)
 router.put('/updateTournamentStepFive',jwtAuthMiddleware,updateTournamentStageFiveController)
-
 router.delete('/deleteTournament/:tID',jwtAuthMiddleware,organizationMiddleware,deleteTournamentController)
+router.put('/updateTournamentStatus',jwtAuthMiddleware,updateTournamentStatusController)
 
 module.exports = router

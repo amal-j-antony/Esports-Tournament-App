@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import  { createContext, useState } from 'react'
 import { useAuth } from './AuthProvider'
 
 export const OrgContext = createContext()
@@ -10,7 +10,7 @@ function OrgProvider({children}) {
 
     const loadOrgData = (data,userID) => {
         setOrgData(data)
-        setUserOrgData(data?.oMembers.find((item,index)=>item?.userID._id == userID))
+        setUserOrgData(data?.oMembers.find((item)=>item?.userID._id == userID))
     }
     const clearOrgData = () => {
         setOrgData(null)

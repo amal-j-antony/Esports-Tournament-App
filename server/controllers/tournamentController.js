@@ -1,3 +1,4 @@
+const { serverErrorLog } = require("../commonFuntions/errorLog")
 const { findByIdAndUpdate } = require("../models/accountsModel")
 const tournament = require("../models/tournamentModel")
 
@@ -104,7 +105,7 @@ exports.updateTournamentStepTwoController = async (req, res) => {
 exports.updateTournamentStepThreeController = async (req, res) => {
     const { rules, tID } = req.body
     try {
-        const result = await tournament.findByIdAndUpdate(tID, {$set: {rules}})
+        const result = await tournament.findByIdAndUpdate(tID, { $set: { rules } })
         res.status(200).json(result)
     } catch (error) {
         console.log(error);
@@ -112,27 +113,57 @@ exports.updateTournamentStepThreeController = async (req, res) => {
     }
 }
 
-exports.updateTournamentStageFourController = async (req,res) => {
-    const {rewards,enableRewards,tID} = req.body
+exports.updateTournamentStageFourController = async (req, res) => {
+    const { rewards, enableRewards, tID } = req.body
     try {
-        const result = await tournament.findByIdAndUpdate(tID,{$set: {rewards,enableRewards}})
+        const result = await tournament.findByIdAndUpdate(tID, { $set: { rewards, enableRewards } })
         res.status(200).json(result)
-    }catch(error) {
+    } catch (error) {
         console.log(error);
         res.status(500).json('Server error')
     }
 }
 
-exports.updateTournamentStageFiveController = async (req,res) => {
+exports.updateTournamentStageFiveController = async (req, res) => {
     const {
-
+        registrationDate,
+        registrationTime,
+        checkIn,
+        checkInMinutes,
+        startDate,
+        startTime,
+        tID
     } = req.body
+    console.log('updateTournamentStageFiveController',req.body);
+    
+
+    try {
+        const result = await tournament.findByIdAndUpdate(tID, {
+            $set: {
+                "schedule.registrationDate":registrationDate,
+                "schedule.registrationTime":registrationTime,
+                "schedule.checkIn":checkIn,
+                "schedule.checkInMinutes":checkInMinutes,
+                "schedule.startDate":startDate,
+                "schedule.startTime":startTime,
+            },            
+        },{returnDocument: "after"})
+console.log(result);
+
+        res.status(200).json(result)
+    } catch (error) {
+        console.log({
+            location: "updateTournamentStageFiveController", error
+        });
+        res.status(500).json("Something went wrong")
+        
+    }
 }
 
-exports.deleteTournamentController = async (req,res) => {
-    const {tID} = req.params
+exports.deleteTournamentController = async (req, res) => {
+    const { tID } = req.params
     try {
-        const result = await tournament.findByIdAndDelete({_id: tID})
+        const result = await tournament.findByIdAndDelete({ _id: tID })
         res.status(200).json({
             result,
             tID
@@ -143,5 +174,28 @@ exports.deleteTournamentController = async (req,res) => {
             error
         });
         res.status(500).json('Server Error')
+    }
+}
+
+exports.getAllTournamentsController = async (req,res) => {
+    try {
+        const result = await tournament.find()
+        res.status(200).json(result)
+    } catch (error) {
+        console.log({
+            location: "getAllTournamentsController",
+            error
+        });
+        res.status(500).json('500 server error')
+    }
+}
+
+exports.updateTournamentStatusController = async (req,res) => {
+    const {status , tID} = req.body
+    try {
+        const result = await tournament.findByIdAndUpdate(tID,{status})
+        res.status(200).json(result)
+    } catch (error) {
+        serverErrorLog('updateTournamentStatusController',error)
     }
 }

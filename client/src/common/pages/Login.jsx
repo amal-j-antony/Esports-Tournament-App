@@ -1,9 +1,9 @@
-import { ArrowLeftCircle, ArrowRight, Eye, EyeDashedIcon, EyeOff, HomeIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import { ArrowRight, Eye, EyeOff } from 'lucide-react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import PixelBlast from '@/components/ui/PixelBlast'
 import { AiFillHome } from "react-icons/ai";
-import z, { email } from 'zod';
+import z from 'zod';
 import { googleAuthenticationAPI, loginToAccountAPI } from '@/services/accountMethods';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/context/AuthProvider';
@@ -11,12 +11,13 @@ import { axiosInstance } from '@/services/axiosInstance';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { HashLoader } from 'react-spinners';
+import { socket } from '@/services/webSocket';
 
 
 
-function Login({getOrgDetails}) {
+function Login({ getOrgDetails }) {
     const [loading, setLoading] = useState(false)
-    const { login, user } = useAuth()
+    const { login } = useAuth()
     const navigate = useNavigate()
     const [view, setView] = useState(false)
     const [errors, setErrors] = useState({})
@@ -60,12 +61,17 @@ function Login({getOrgDetails}) {
             login(result.data.account)
             axiosInstance.defaults.headers.common.Authorization = `Bearer ${result.data.token}`
             setLoading(true)
-            setTimeout(()=>{
+            setTimeout(() => {
                 setLoading(false)
                 getOrgDetails(result.data.account?.userID)
                 navigate(`/dashboard/discover/${result.data.account?.userID}`)
-            },3000)
-            
+                socket.auth = {
+                    user: result?.data.account?.userID
+                }
+                socket.connect()
+                console.log('Socket connected', socket.auth);
+            }, 3000)
+
 
         } else {
             toast.error("Something went wrong")
@@ -88,6 +94,7 @@ function Login({getOrgDetails}) {
                 login(result.data.account)
                 axiosInstance.defaults.headers.common.Authorization = `Bearer ${result.data.token}`
                 navigate(`/dashboard/discover/${result.data.account?.userID}`)
+                socket.connect()
             } else {
                 toast('Something went wrong...Please try again')
             }

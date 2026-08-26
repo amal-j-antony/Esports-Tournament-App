@@ -1,11 +1,10 @@
-import { Delete, Scale, Trash } from 'lucide-react'
-import React, { useState } from 'react'
+import { Trash } from 'lucide-react'
+import { useState } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
-import { FaEdit, FaInfoCircle } from 'react-icons/fa'
-import { FaCheck, FaInfo, FaPencil, FaPlus } from 'react-icons/fa6'
+import {  FaInfoCircle } from 'react-icons/fa'
+import { FaPlus } from 'react-icons/fa6'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { toast } from 'react-toastify'
-import { add } from 'three/src/nodes/math/OperatorNode.js'
 import EditRuleDialog from '../TournamentComponents/EditRuleDialog'
 import DeleteRuleDialog from '../TournamentComponents/DeleteRuleDialog'
 import { useParams } from 'react-router-dom'
@@ -14,21 +13,19 @@ import { StepperPreload } from '@/common/components/Loader'
 
 
 function CreateStepThree({
-    gameNames,
     handleStepChange,
     getTournamentData
 }) {
     const { TID } = useParams()
-    const { control, getValues } = useFormContext()
+    const { control, getValues , formState } = useFormContext()
     const [ruleEditButton, setRuleEditButton] = useState(false)
     const [ruleRemoveButton, setRuleRemoveButton] = useState(false)
     const [loading, setLoading] = useState(false)
     const [ruleInput, setRuleInput] = useState("")
-    const { fields, append, remove, update } = useFieldArray({
+    const { append, remove, update } = useFieldArray({
         control,
         name: "rules"
     })
-    const inputStyle = 'bg-accent text-center py-4  rounded-xl w-100 '
 
     const ruleData = useWatch({
         control,
@@ -91,6 +88,9 @@ function CreateStepThree({
         }, 2000)
     }
 
+    const checkDirty = !!formState.dirtyFields.rules
+
+
     const validateData = () => {
         const data = getValues()
         if (data.rules.length == 0) {
@@ -148,15 +148,14 @@ function CreateStepThree({
                             <p className='p-3 flex items-center justify-center gap-2 rounded-xl border bg-[#1d1d1d]'><FaInfoCircle className='h-5 w-5' />  Tournament organizers are responsible for enforcing the rules they set for tournaments.</p>
                             <div className='grid grid-cols-3 gap-5 py-5'>
                                 <button onClick={() => handleStepChange("previous")} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Previous Step</button>
-                                <button type='button' onClick={() => validateData()} className='bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Save Changes </button>
-                                <button onClick={() => {
-                                    validateData()
+                                <button type='button' onClick={() => validateData()} className='bg-[#5a5a5a] rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Verify and Save Changes </button>
+                                <button disabled={checkDirty} onClick={() => {                                    
                                     setLoading(true)
                                     setTimeout(()=>{
                                         setLoading(false)
                                         handleStepChange("next")
-                                    },2000)
-                                    }} className='bg-accent-foreground rounded-xl p-3 hover:bg-accent-foreground duration-500 cursor-pointer' >Next Step</button>
+                                    },1000)
+                                    }} className={`bg-[#2a2a2a] rounded-xl p-3 hover:bg-accent-foreground duration-500 ${checkDirty ? 'cursor-not-allowed' : 'cursor-pointer'}  `} >Next Step</button>
                             </div>
                         </section>
                 }
