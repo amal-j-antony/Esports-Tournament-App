@@ -19,6 +19,9 @@ import { OrgContext } from '@/context/OrgProvider'
 import { EditTournamentStatus } from './TDropdowns'
 import { toast } from 'react-toastify'
 import { HashLoader } from 'react-spinners'
+import { tournamentStatus } from '@/data/universalStyles'
+import { ClosedCTA, ComingSoonCTA, RegOpenCTA } from './RegCTA'
+import { TOURNAMENT_STATUS } from '@/data/constants/tournamentStatus'
 
 
 function TournamentDetails() {
@@ -38,28 +41,6 @@ function TournamentDetails() {
   }
   console.log('regOPen:', tournamentDates);
 
-  const tournamentStatus = {
-    Draft: {
-      text: "Draft",
-      style: "bg-gray-700 text-gray-400 px-2 rounded-2xl"
-    },
-    Open: {
-      text: "Open",
-      style: "bg-green-700 text-green-400 px-2 rounded-2xl"
-    },
-    Closed: {
-      text: "Closed",
-      style: "bg-red-700 text-red-400 px-2 rounded-2xl"
-    },
-    Coming_Soon: {
-      text: "Coming soon",
-      style: "bg-slate-50/20 px-2 rounded-2xl"
-    },
-    Loading: {
-      text: "Loading...",
-      style: "bg-slate-50 px-2 rounded-2xl"
-    }
-  }
 
   const registrationStatus = {
     Draft: "This tournament is unpublished and only visble to organization members",
@@ -320,12 +301,14 @@ function TournamentDetails() {
                   <span className=' text-green-400 '>20d</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-5 bg-red-900 p-10 rounded-2xl">
-                <h1 className='text-2xl font-bold'>Registration open</h1>
-                <p>Register your team to participate in the tournament</p>
-                <button className='bg-slate-100 py-3 text-black text-xl flex items-center justify-center gap-2 rounded-2xl' > Register Team <FaArrowRight /></button>
-                <p>Regitration closes on Aug 10,2026</p>
-              </div>
+
+              {/* registration CTA */}
+              { tournamentData.status == TOURNAMENT_STATUS.OPEN && <RegOpenCTA schedule={tournamentData.schedule} /> }
+
+              { tournamentData.status == TOURNAMENT_STATUS.CLOSED && <ClosedCTA schedule={tournamentData.schedule} /> }
+
+              { tournamentData.status == TOURNAMENT_STATUS.COMING_SOON && <ComingSoonCTA schedule={tournamentData.schedule} /> }
+
               <div className="flex flex-col gap-5 bg-[#1f1f1f] p-10 rounded-2xl">
                 <h1 className='text-2xl font-bold'>Tournament Organizer</h1>
                 <div className="flex gap-5 items-center ">

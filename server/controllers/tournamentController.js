@@ -127,7 +127,9 @@ exports.updateTournamentStageFourController = async (req, res) => {
 exports.updateTournamentStageFiveController = async (req, res) => {
     const {
         registrationDate,
+        registrationCloseDate,
         registrationTime,
+        registrationCloseTime,
         checkIn,
         checkInMinutes,
         startDate,
@@ -141,7 +143,9 @@ exports.updateTournamentStageFiveController = async (req, res) => {
         const result = await tournament.findByIdAndUpdate(tID, {
             $set: {
                 "schedule.registrationDate":registrationDate,
+                "schedule.registrationCloseDate":registrationCloseDate,
                 "schedule.registrationTime":registrationTime,
+                "schedule.registrationCloseTime":registrationCloseTime,
                 "schedule.checkIn":checkIn,
                 "schedule.checkInMinutes":checkInMinutes,
                 "schedule.startDate":startDate,

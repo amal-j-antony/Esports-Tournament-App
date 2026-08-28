@@ -31,6 +31,8 @@ function CreateSquad() {
     }
     const defaultAvatar = "https://res.cloudinary.com/dwaaoyztz/image/upload/v1783783482/user_s1wtzw.png"
 
+    
+
     useEffect(()=>{
         getAllUsers()
     },[user.userID])

@@ -39,6 +39,11 @@ const io = new Server (socketServer, {
 
 setupSocket(io)
 
+server.use((req,res,next)=>{
+    req.io = io
+    next()
+})
+
 server.use(express.static('uploads'))
 
 

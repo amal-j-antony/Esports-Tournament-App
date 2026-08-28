@@ -1,8 +1,8 @@
 export const TOURNAMENT_STATUS = {
     DRAFT: "Draft",
-    REGISTRATION: 'Registration Open',
+    OPEN: 'Open',
     LIVE: 'Live',
-    COMING_SOON: 'Coming Soon',
-    FINISHED: 'Finished'
+    COMING_SOON: 'Coming_Soon',
+    CLOSED: 'Closed'
 }
 

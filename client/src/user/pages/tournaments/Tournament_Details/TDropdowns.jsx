@@ -22,7 +22,7 @@ export function EditTournamentStatus({currentStatus,updateTournamentStatus}) {
             <DropdownMenuContent className="bg-accent text-ceter">
                 {
                     options.map((item)=>(
-                        <DropdownMenuItem className="items-center gap-2" key={item} >{item} {item == currentStatus && <><TbPointFilled/> </> } </DropdownMenuItem>
+                        <button onClick={()=>updateTournamentStatus(item)} className="flex px-5 py-1 items-center gap-2" key={item} >{item} {item == currentStatus && <><TbPointFilled/> </> } </button>
                     ))
                 }
             </DropdownMenuContent>

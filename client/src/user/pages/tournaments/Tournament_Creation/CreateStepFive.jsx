@@ -21,11 +21,12 @@ function CreateStepFive({
   const { TID } = useParams()
   const [loading, setLoading] = useState(false)
   const [calendarOpen, setCalendarOpen] = useState(false)
+  const [calendarOpen1, setCalendarOpen1] = useState(false)
   const [calendarOpen2, setCalendarOpen2] = useState(false)
   const { register, control, getValues, setValue, formState, handleSubmit } = useFormContext()
-  const [checkIn, regDate, startDate, regTime, startTime] = useWatch({
+  const [checkIn, regDate,regCloseDate, startDate, regTime,regCloseTime, startTime  ] = useWatch({
     control,
-    name: ["checkIn", "registrationDate", "startDate", "registrationTime", "startTime"]
+    name: ["checkIn", "registrationDate","registrationCloseDate", "startDate", "registrationTime","registrationCloseTime", "startTime"]
   })
 
   console.log(formState.errors);
@@ -42,8 +43,10 @@ function CreateStepFive({
     console.log(formState.dirtyFields);
     const payload = {
       registrationDate: data.registrationDate,
-      registrationTime: data.registrationTIme,
-      checkIn : data.checkIn,
+      registrationCloseDate: data.registrationCloseDate,      
+      registrationTime: data.registrationTime,
+      registrationCloseTime: data.registrationCloseTime,
+      checkIn: data.checkIn,
       checkInMinutes: data.checkInMinutes,
       startDate: data.startDate,
       startTime: data.startTime,
@@ -52,9 +55,9 @@ function CreateStepFive({
     try {
       setLoading(true)
       const result = await updateTournamentStepFiveAPI(payload)
-      console.log("updateTournamentStepFiveAPI:",result);      
+      console.log("updateTournamentStepFiveAPI:", result);
       if (result.status == 200) {
-        toast('Data Updated')        
+        toast('Data Updated')
       }
       setTimeout(() => {
         setLoading(false)
@@ -70,6 +73,10 @@ function CreateStepFive({
   useEffect(() => {
     const initDates = () => {
       if (regDate == "") {
+        setValue("registrationDate", new Date(Date.now()))
+      }
+
+      if (regCloseDate == "") {
         setValue("registrationDate", new Date(Date.now()))
       }
 
@@ -89,7 +96,7 @@ function CreateStepFive({
           <form onSubmit={handleSubmit(sendData)} className="grid grid-cols-2 items-center gap-5 w-full">
             <h1 className="col-span-2 text-2xl font-bold">Tournament Schedule</h1>
             <label htmlFor=""> Registration Open Date and Time</label>
-            <div className="">
+            <div className="cursor-pointer">
               {
                 regDate ? <span onClick={() => setCalendarOpen(!calendarOpen)} className={inputStyle + " flex items-center justify-center gap-5"}>{format(regDate, "PP")} {regTime}  <FaChevronDown /> </span>
                   :
@@ -121,6 +128,41 @@ function CreateStepFive({
               name='registrationDate'
               render={({ message }) => <ShowFormError errorText={message} />}
             />
+            {/* registration close */}
+            <label htmlFor=""> Registration Close Date and Time</label>
+            <div className="cursor-pointer">
+              {
+                regCloseDate ? <span onClick={() => setCalendarOpen1(!calendarOpen1)} className={inputStyle + " flex items-center justify-center gap-5"}>{format(regCloseDate, "PP")} {regCloseTime}  <FaChevronDown /> </span>
+                  :
+                  <span className={inputStyle}>Select Date</span>
+              }
+              <div className={`cursor-pointer flex flex-col items-center p-5 mt-5 rounded-2xl bg-[#1f1f1f] ${calendarOpen1 ? 'block' : "hidden"}`}>
+                <Controller
+                  control={control}
+                  name="registrationCloseDate"
+                  render={({ field }) => (
+                    <Calendar
+                      fromDate={new Date()}
+                      className={`bg-accent   `}
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                    />
+                  )}
+                />
+                <div className={inputStyle + ' flex items-center gap-5 mt-5'} >
+                  <label htmlFor="" className='text-xl'>Time:</label>
+                  <input {...register('registrationCloseTime')} defaultValue="00:00:00" type="time" />
+                  <button type='button' onClick={() => setCalendarOpen1(!calendarOpen1)} className='py-2 px-4 bg-[#3e3e3e] rounded-xl' > Ok</button>
+                </div>
+
+              </div>
+            </div>
+            <ErrorMessage
+              name='registrationDate'
+              render={({ message }) => <ShowFormError errorText={message} />}
+            />
+
             <label htmlFor="">Enable Check in <CheckInTooltip /> </label>
 
             <Controller

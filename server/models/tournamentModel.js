@@ -125,7 +125,9 @@ const tournamentSchema = new mongoose.Schema({
     
     schedule: {
         registrationDate: { type: Date, default:Date.now },
+        registrationCloseDate: { type: Date, default:Date.now },
         registrationTime: { type: String, default: "00:00:00"},
+        registrationCloseTime: { type: String, default: "00:00:00"},
         startDate: { type: Date, default:Date.now },
         startTime: { type: String, default: "00:00:00"},
         checkIn: {type: Boolean,default: true},

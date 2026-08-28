@@ -15,6 +15,26 @@ const dateCheck = z.date().refine((date) => {
     { message: "You have selected an older date ,Please check your entered date" }
 )
 
+const regDateCheck = (open,close,openTime,closeTime) => {
+    const openDate =new Date(open)
+    const closeDate =new Date(close)
+    if(openDate >= closeDate){
+        if(openTime>closeTime){
+            return false
+        }else return true
+    }else return true
+}
+
+const startDateCheck = (close,start) => {
+    const closeDate =new Date(close)
+    const startDate =new Date(start)
+    if(closeDate > startDate){
+        return false
+    }else return true
+}
+
+
+
 
 const baseSchema = z.object({
 
@@ -24,6 +44,10 @@ const baseSchema = z.object({
     minTeamSize: z.number().min(4, "Minimum team count cannot be lower than 4"),
     registrationDate: dateCheck,
     startDate: dateCheck,
+    registrationCloseDate: dateCheck,
+    registrationTime: z.string(),
+    registrationCloseTime: z.string(),
+    startTime: z.string(),
     checkInMinutes: z.number(),
     checkIn : z.boolean()
 })
@@ -67,6 +91,22 @@ export const tournamentSchema = z.discriminatedUnion("format", [
             code: "custom",
             path: ["checkInMinutes"],
             message: "Check in time must be a minimum of 30 minutes"
+        })
+    }
+
+    if(!regDateCheck(data.registrationDate,data.registrationCloseDate,data.registrationTime,data.registrationCloseTime)){
+        ctx.addIssue({
+            code: "custom",
+            path: ['registrationCloseDate'],
+            message: "Registration close date and time cannot be before registration open "
+        })
+    }
+
+    if(!startDateCheck(data.registrationCloseDate,data.startDate)){
+        ctx.addIssue({
+            code: "custom",
+            path: ['startDate'],
+            message: "Start date and time cannot be before registration close "
         })
     }
 })
